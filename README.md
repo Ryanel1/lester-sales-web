@@ -25,8 +25,11 @@ Portal protection is bypassed in local development when no auth variables are se
 - Typed fixture data in `src/data/portal.ts`
 - Password-protected pages and downloadable sales files with a signed 12-hour session
 - Dedicated customer access screen and safe return-to-resource redirects
+- Dedicated LesterSales.net Supabase project with seven portal tables and private Storage
+- Private `/admin` Catalog Builder with separate Supabase administrator authentication
+- Live Supabase-backed Champion catalog with protected short-lived file delivery
 
-LesterSales.net has its own GitHub repository and Vercel project. The local repository is not yet connected to a dedicated LesterSales.net Supabase project, and the portal tables, private Storage bucket, and production environment variables still need to be configured. No outside product's code, database, storage, authentication, repository, or deployment resource is used by this application.
+LesterSales.net has its own GitHub repository, Vercel project, and dedicated Supabase project. Local, Vercel Preview, and Vercel Production environments are configured with LesterSales.net-owned credentials. No outside product's code, database, storage, authentication, repository, or deployment resource is used by this application. A production Vercel deployment and domain cutover are still pending.
 
 ## Content migration path
 

@@ -25,58 +25,58 @@ LesterSales.net is a standalone product. Its GitHub repository, Vercel project, 
 
 ### Not yet complete
 
-- [ ] The local codebase has an initial Git commit or has been pushed to GitHub. The remote currently has no branches.
+- [x] The initial codebase is committed and pushed to GitHub.
 - [ ] The Vercel project has a production deployment. It currently has no production URL.
-- [ ] A dedicated LesterSales.net Supabase project exists. The Supabase account currently lists only the unrelated existing project.
-- [ ] The site reads live data. It still reads `src/data/portal.ts` fixtures.
-- [ ] A private `/admin` publisher exists.
+- [x] A dedicated LesterSales.net Supabase project exists and is linked to this repository.
+- [ ] The transition to live data is complete. Brand pages now query Supabase and Champion is live there, but fixtures remain as temporary fallback/navigation data.
+- [x] A private `/admin` Catalog Builder exists with separate administrator authentication.
 - [ ] The 55 live Squarespace sales-resource references have been migrated.
-- [ ] Automated tests exist.
+- [ ] Automated coverage is complete. Initial unit tests now cover portal sessions, safe redirects, publication timing, and prebook closure; API and end-to-end coverage remain.
 
 ## Remaining work, in order
 
 ### 1. Establish the standalone project baseline
 
-- [ ] Review the untracked files and create the initial Git commit.
-- [ ] Push the initial branch to `Ryanel1/lester-sales-web`.
-- [ ] Link this working directory to the existing Vercel `lester-sales-web` project.
-- [ ] Create a new Supabase project specifically for LesterSales.net.
-- [ ] Link this repository's Supabase CLI configuration only to that project.
-- [ ] Add separate local, Vercel Preview, and Vercel Production environment variables.
-- [ ] Confirm that no credential, project reference, database URL, bucket, or runtime dependency points to another product.
+- [x] Review the untracked files and create the initial Git commit.
+- [x] Push the initial branch to `Ryanel1/lester-sales-web`.
+- [x] Link this working directory to the existing Vercel `lester-sales-web` project.
+- [x] Create a new Supabase project specifically for LesterSales.net.
+- [x] Link this repository's Supabase CLI configuration only to that project.
+- [x] Add separate local, Vercel Preview, and Vercel Production environment variables.
+- [x] Confirm that no credential, project reference, database URL, bucket, or runtime dependency points to another product.
 
 Completion condition: GitHub contains the code, Vercel recognizes this repository, and the LesterSales.net Supabase project can be reached with its own development credentials.
 
 ### 2. Build the Supabase foundation
 
-- [ ] Add versioned SQL migrations under `supabase/migrations/`.
-- [ ] Create `portal_brands`.
-- [ ] Create `portal_catalogs` and `portal_catalog_resources`.
-- [ ] Create `portal_prebooks` and `portal_prebook_resources`.
-- [ ] Create `portal_art_groups` and `portal_art_resources`.
-- [ ] Add enums or constraints for publication status, resource kind, source type, and link status.
-- [ ] Add foreign keys, unique constraints, display-order indexes, timestamps, and source-integrity checks.
-- [ ] Add publish scheduling and archive fields.
-- [ ] Enforce that a resource uses exactly one source: an HTTPS company URL or a managed Storage object.
-- [ ] Enable Row Level Security on every portal table.
-- [ ] Permit public/anonymous database access to nothing.
-- [ ] Permit authenticated publisher access only through protected server routes.
-- [ ] Create private LesterSales.net Storage buckets for documents and cover/hero media.
-- [ ] Add Storage policies that prevent anonymous listing or direct permanent downloads.
-- [ ] Seed the four brands in their desired display order.
+- [x] Add versioned SQL migrations under `supabase/migrations/`.
+- [x] Create `portal_brands`.
+- [x] Create `portal_catalogs` and `portal_catalog_resources`.
+- [x] Create `portal_prebooks` and `portal_prebook_resources`.
+- [x] Create `portal_art_groups` and `portal_art_resources`.
+- [x] Add enums or constraints for publication status, resource kind, source type, and link status.
+- [x] Add foreign keys, unique constraints, display-order indexes, timestamps, and source-integrity checks.
+- [x] Add publish scheduling and archive fields.
+- [x] Enforce that a resource uses exactly one source: an HTTPS company URL or a managed Storage object.
+- [x] Enable Row Level Security on every portal table.
+- [x] Permit public/anonymous database access to nothing.
+- [x] Permit authenticated publisher access only through protected server routes.
+- [x] Create private LesterSales.net Storage buckets for documents and cover/hero media.
+- [x] Add Storage policies that prevent anonymous listing or direct permanent downloads.
+- [x] Seed the four brands in their desired display order.
 
 Completion condition: migrations can build an empty LesterSales.net database from scratch, all policy tests pass, and no portal data is exposed directly through the anonymous Supabase key.
 
 ### 3. Build the private LesterSales.net publisher
 
-- [ ] Create a protected `/admin` area in this repository.
-- [ ] Use Supabase Auth for administrator sign-in and restrict publishing to an explicit Lester Sales administrator allowlist.
-- [ ] Keep customer shared-password access separate from administrator authentication.
-- [ ] Build the Catalog Builder first as the vertical slice.
+- [x] Create a protected `/admin` area in this repository.
+- [x] Use Supabase Auth for administrator sign-in and restrict publishing to an explicit Lester Sales administrator allowlist.
+- [x] Keep customer shared-password access separate from administrator authentication.
+- [x] Build the Catalog Builder first as the vertical slice.
 - [ ] Support catalog title, brand, season, summary, cover, catalog file/link, pricing, programs, display order, and status.
-- [ ] For every resource, support `Paste company link` and `Upload file`.
+- [x] For the cover and primary catalog resource, support `Paste company link` and direct-to-private-Storage `Upload file`.
 - [ ] Add `Test link`, last-checked status, source notes, and temporary-signed-URL warnings.
-- [ ] Add draft save, preview, publish, schedule, unpublish, archive, duplicate, reorder, and permanent delete.
+- [ ] Extend the working draft-save/publish controls with preview, schedule, unpublish, archive, duplicate, reorder, and permanent delete.
 - [ ] Build the Prebook Builder with deadline, ship date, minimums, details, catalog, price list, workbook, and additional resources.
 - [ ] Automatically hide closed prebooks and prevent past-deadline programs from publishing as open.
 - [ ] Build the Art Library Manager with brand groups and ordered resources.
@@ -86,16 +86,16 @@ Completion condition: an administrator can publish one new catalog from `/admin`
 
 ### 4. Connect the customer portal to published data
 
-- [ ] Add server-only Supabase clients and typed portal queries.
+- [x] Add server-only Supabase clients and typed portal queries.
 - [ ] Replace `src/data/portal.ts` fixtures with a repository/data-access layer backed by the dedicated LesterSales.net Supabase project.
 - [ ] Return one stable customer-facing data shape for external URLs and managed files.
-- [ ] Show only published or currently scheduled-live records.
-- [ ] Exclude drafts, archived entries, future content, and closed prebooks.
-- [ ] Add protected download routes that verify the customer session and create short-lived Supabase signed URLs.
-- [ ] Resolve private cover and hero images without exposing permanent Storage URLs.
+- [x] Show only published or currently scheduled-live records.
+- [x] Exclude drafts, archived entries, future content, and closed prebooks.
+- [x] Add protected download routes that verify the customer session and create short-lived Supabase signed URLs.
+- [x] Resolve private cover and hero images without exposing permanent Storage URLs.
 - [ ] Add cache invalidation or short revalidation so publishing changes appear promptly.
 - [ ] Fail safely with useful unavailable states when Supabase or a source file is temporarily unavailable.
-- [ ] Add a visible customer sign-out action.
+- [x] Add a visible customer sign-out action.
 
 Completion condition: publishing or archiving a catalog changes the password-protected customer site without a code change or redeployment.
 
@@ -122,7 +122,7 @@ Completion condition: every current, approved Squarespace resource has a verifie
 ### 6. Add security, reliability, and test coverage
 
 - [ ] Rate-limit shared-password attempts.
-- [ ] Add security headers in `next.config.ts` or the Vercel configuration.
+- [x] Add baseline security headers in `next.config.ts` or the Vercel configuration.
 - [ ] Keep service-role credentials server-only and add a secret-exposure check.
 - [ ] Add structured production logging for failed authentication, publishing, uploads, and signed downloads without logging sensitive values.
 - [ ] Add an automated external-link checker and publisher warnings for broken resources.

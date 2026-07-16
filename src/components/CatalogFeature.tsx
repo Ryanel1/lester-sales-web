@@ -13,6 +13,7 @@ export function CatalogFeature({ catalog, priority = false }: { catalog: Catalog
           priority={priority}
           sizes="(max-width: 760px) 80vw, 430px"
           src={catalog.image}
+          unoptimized={catalog.image.startsWith("/api/media/") || catalog.image.startsWith("http")}
           width={612}
         />
       </div>

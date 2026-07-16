@@ -16,6 +16,9 @@ export function SiteFooter() {
           Account Application
         </a>
         <a href="mailto:info@lestersales.net">Contact</a>
+        <form action="/api/logout" method="post">
+          <button type="submit">Sign out</button>
+        </form>
         <span>Customer resources</span>
       </div>
     </footer>

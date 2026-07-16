@@ -7,7 +7,7 @@ import {
 } from "@/lib/portal-auth";
 
 const PUBLIC_PATHS = ["/api/access", "/api/logout"];
-const PUBLIC_PREFIXES = ["/_next/", "/catalogs/"];
+const PUBLIC_PREFIXES = ["/_next/", "/catalogs/", "/admin", "/api/admin/"];
 
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
