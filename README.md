@@ -27,17 +27,19 @@ Portal protection is bypassed in local development when no auth variables are se
 - Dedicated customer access screen and safe return-to-resource redirects
 - Dedicated LesterSales.net Supabase project with seven portal tables and private Storage
 - Private `/admin` Catalog Builder with separate Supabase administrator authentication
+- Catalog pricing/program/workbook attachments with company-link or private-upload sources
+- Catalog edit, preview, publish, unpublish, archive, duplicate, reorder, and delete controls
 - Live Supabase-backed Champion catalog with protected short-lived file delivery
 
 LesterSales.net has its own GitHub repository, Vercel project, and dedicated Supabase project. Local, Vercel Preview, and Vercel Production environments are configured with LesterSales.net-owned credentials. No outside product's code, database, storage, authentication, repository, or deployment resource is used by this application. The first standalone production deployment is live at `https://lester-sales-web.vercel.app`; custom-domain cutover is still pending.
 
 ## Content migration path
 
-The UI currently reads typed local data. The component props deliberately match the future publishing model so the storage layer can be replaced without rebuilding the pages.
+Brand pages now read published content from the dedicated LesterSales.net Supabase project. Typed local data remains temporarily as navigation metadata and a safe fallback while the remaining brands are migrated.
 
 The next product phase is a private publisher owned by LesterSales.net:
 
-1. Catalog Manager for cover image, catalog, pricing, supporting programs, status, order, and season. Each resource accepts either a pasted company link or an uploaded file.
+1. Catalog Manager for cover image, catalog, pricing, supporting programs, status, order, and season. Each resource accepts either a pasted company link or an uploaded file. The core catalog lifecycle is working; future scheduling and server-side link health remain.
 2. Prebook Builder for hero image, deadlines, ship dates, minimums, details, catalog, price list, and workbook. Catalog, price list, and workbook each accept either a pasted link or an upload.
 3. Art Library Manager for grouped brand-specific art resources with the same pasted-link/upload control.
 4. Preview, publish, unpublish, duplicate, archive, reorder, and delete controls.

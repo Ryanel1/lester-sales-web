@@ -73,10 +73,11 @@ Completion condition: migrations can build an empty LesterSales.net database fro
 - [x] Use Supabase Auth for administrator sign-in and restrict publishing to an explicit Lester Sales administrator allowlist.
 - [x] Keep customer shared-password access separate from administrator authentication.
 - [x] Build the Catalog Builder first as the vertical slice.
-- [ ] Support catalog title, brand, season, summary, cover, catalog file/link, pricing, programs, display order, and status.
-- [x] For the cover and primary catalog resource, support `Paste company link` and direct-to-private-Storage `Upload file`.
-- [ ] Add `Test link`, last-checked status, source notes, and temporary-signed-URL warnings.
-- [ ] Extend the working draft-save/publish controls with preview, schedule, unpublish, archive, duplicate, reorder, and permanent delete.
+- [x] Support catalog title, brand, season, summary, cover, catalog file/link, attached pricing/program/workbook resources, display order, and status.
+- [x] For every Catalog Builder resource, support `Paste company link` and direct-to-private-Storage `Upload file`.
+- [ ] Extend the working `Test link` action and temporary-signed-URL warnings with server-side last-checked status and private source notes.
+- [x] Add edit, inline preview, publish, unpublish, archive, duplicate, reorder, and permanent delete controls to the Catalog Builder.
+- [ ] Add future publish scheduling to the Catalog Builder.
 - [ ] Build the Prebook Builder with deadline, ship date, minimums, details, catalog, price list, workbook, and additional resources.
 - [ ] Automatically hide closed prebooks and prevent past-deadline programs from publishing as open.
 - [ ] Build the Art Library Manager with brand groups and ordered resources.
@@ -88,16 +89,16 @@ Completion condition: an administrator can publish one new catalog from `/admin`
 
 - [x] Add server-only Supabase clients and typed portal queries.
 - [ ] Replace `src/data/portal.ts` fixtures with a repository/data-access layer backed by the dedicated LesterSales.net Supabase project.
-- [ ] Return one stable customer-facing data shape for external URLs and managed files.
+- [x] Return one stable customer-facing data shape for external URLs and managed files.
 - [x] Show only published or currently scheduled-live records.
 - [x] Exclude drafts, archived entries, future content, and closed prebooks.
 - [x] Add protected download routes that verify the customer session and create short-lived Supabase signed URLs.
 - [x] Resolve private cover and hero images without exposing permanent Storage URLs.
-- [ ] Add cache invalidation or short revalidation so publishing changes appear promptly.
-- [ ] Fail safely with useful unavailable states when Supabase or a source file is temporarily unavailable.
+- [x] Keep brand pages dynamic so publishing changes appear on the next customer request.
+- [x] Fail safely with fixture-backed brand structure and useful unavailable states when Supabase or a source file is temporarily unavailable.
 - [x] Add a visible customer sign-out action.
 
-Completion condition: publishing or archiving a catalog changes the password-protected customer site without a code change or redeployment.
+Completion condition: publishing or archiving a catalog changes the password-protected customer site without a code change or redeployment. Verified for the Champion catalog and the temporary lifecycle test catalog.
 
 ### 5. Migrate current customer content
 
