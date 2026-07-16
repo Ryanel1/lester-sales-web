@@ -29,7 +29,7 @@ Portal protection is bypassed in local development when no auth variables are se
 - Private `/admin` Catalog Builder with separate Supabase administrator authentication
 - Live Supabase-backed Champion catalog with protected short-lived file delivery
 
-LesterSales.net has its own GitHub repository, Vercel project, and dedicated Supabase project. Local, Vercel Preview, and Vercel Production environments are configured with LesterSales.net-owned credentials. No outside product's code, database, storage, authentication, repository, or deployment resource is used by this application. A production Vercel deployment and domain cutover are still pending.
+LesterSales.net has its own GitHub repository, Vercel project, and dedicated Supabase project. Local, Vercel Preview, and Vercel Production environments are configured with LesterSales.net-owned credentials. No outside product's code, database, storage, authentication, repository, or deployment resource is used by this application. The first standalone production deployment is live at `https://lester-sales-web.vercel.app`; custom-domain cutover is still pending.
 
 ## Content migration path
 

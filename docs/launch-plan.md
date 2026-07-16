@@ -26,7 +26,7 @@ LesterSales.net is a standalone product. Its GitHub repository, Vercel project, 
 ### Not yet complete
 
 - [x] The initial codebase is committed and pushed to GitHub.
-- [ ] The Vercel project has a production deployment. It currently has no production URL.
+- [x] The Vercel project has a verified production deployment at `https://lester-sales-web.vercel.app`; the custom domain is not connected yet.
 - [x] A dedicated LesterSales.net Supabase project exists and is linked to this repository.
 - [ ] The transition to live data is complete. Brand pages now query Supabase and Champion is live there, but fixtures remain as temporary fallback/navigation data.
 - [x] A private `/admin` Catalog Builder exists with separate administrator authentication.
@@ -138,10 +138,10 @@ Completion condition: critical customer and publishing flows have automated cove
 
 ### 7. Deploy, review, and cut over the domain
 
-- [ ] Configure Vercel Preview and Production variables for portal auth, Supabase, admin allowlist, and any link-check/upload secrets.
+- [x] Configure Vercel Preview and Production variables for portal auth, Supabase, and the administrator allowlist. Link-check-specific secrets are not yet needed.
 - [ ] Deploy a Vercel Preview build and test it on customer devices.
 - [ ] Seed Preview with representative data and complete an administrator publish-to-customer smoke test.
-- [ ] Create the first production deployment without connecting the domain.
+- [x] Create and smoke-test the first production deployment without connecting the domain.
 - [ ] Back up the current Squarespace site and export its live-resource manifest.
 - [ ] Define redirects for useful old brand URLs such as `/champion`, `/glb`, `/underarmour`, and `/pro`.
 - [ ] Remove Resort from the old live navigation during cutover.
