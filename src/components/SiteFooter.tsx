@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-export function SiteFooter() {
+export function SiteFooter({ variant = "default" }: { variant?: "default" | "portfolio" }) {
   return (
-    <footer className="siteFooter">
+    <footer className={`siteFooter${variant === "portfolio" ? " siteFooterPortfolio" : ""}`}>
       <div>
         <Link className="footerWordmark" href="/">Lester Sales</Link>
         <p>Current catalogs, programs, pricing, and art resources for Lester Sales customers.</p>

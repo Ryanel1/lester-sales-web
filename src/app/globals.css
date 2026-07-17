@@ -352,7 +352,6 @@ button, input, select, textarea { font: inherit; }
 
 .proSportsPortfolio {
   background: var(--workspace-subtle);
-  border-bottom: 1px solid var(--line);
   padding: clamp(56px, 6.5vw, 88px) var(--page-gutter);
 }
 .proSportsPortfolioInner {
@@ -399,17 +398,6 @@ button, input, select, textarea { font: inherit; }
 }
 .proSportsPortfolio a:hover { background: var(--surface); border-color: #9eabb3; }
 .proSportsPortfolio a svg { height: 17px; width: 17px; }
-
-.homeContact {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  max-width: calc(var(--content-width) + (var(--page-gutter) * 2));
-  padding: 40px var(--page-gutter);
-}
-.homeContact p { font-size: 0.9375rem; font-weight: 700; margin: 0; }
-.homeContact a { color: var(--text-soft); font-size: 0.75rem; font-weight: 700; text-underline-offset: 4px; }
 
 @media (prefers-reduced-motion: no-preference) {
   .portfolioHero h1, .portfolioHeroIntroduction, .portfolioBrand { animation: portfolioEnter 560ms var(--ease-out) both; }
@@ -570,6 +558,7 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
   justify-content: space-between;
   padding: 36px max(var(--page-gutter), calc((100vw - var(--content-width)) / 2));
 }
+.siteFooterPortfolio { background: var(--surface); }
 .footerWordmark { font-size: 0.9375rem; font-weight: 800; text-decoration: none; }
 .siteFooter p { color: var(--text-soft); font-size: 0.75rem; line-height: 1.5; margin: 11px 0 0; max-width: 50ch; }
 .footerLinks { align-items: flex-end; display: flex; flex-direction: column; gap: 10px; }
@@ -641,7 +630,7 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
 @media (max-width: 700px) {
   .portfolioGrid { grid-template-columns: 1fr; }
   .portfolioBrand, .portfolioBrandChampion, .portfolioBrandUnderArmour, .portfolioBrandGear, .portfolioBrandComfortWash { grid-column: auto; min-height: 360px; }
-  .homeContact, .siteFooter { align-items: flex-start; flex-direction: column; }
+  .siteFooter { align-items: flex-start; flex-direction: column; }
   .sectionHeading, .catalogFeature, .prebookFeature, .resourceColumns { grid-template-columns: 1fr; }
   .catalogCoverWell { justify-self: center; max-width: min(78vw, 360px); }
   .catalogContent { max-width: none; }

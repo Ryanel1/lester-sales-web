@@ -114,12 +114,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="homeContact">
-          <p>Need help choosing the right line or program?</p>
-          <a href="mailto:info@lestersales.net">Contact Lester Sales</a>
-        </section>
       </main>
-      <SiteFooter />
+      <SiteFooter variant="portfolio" />
     </>
   );
 }
