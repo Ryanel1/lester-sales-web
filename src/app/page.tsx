@@ -12,7 +12,6 @@ export default function HomePage() {
       <main id="main-content">
         <section className="homeHero">
           <div className="homeHeroCopy">
-            <p className="heroContext">Customer resource library</p>
             <h1>The right sales tools, right when you need them.</h1>
             <p>
               Browse current inline catalogs, open prebooks, pricing sheets, and art collections by brand.
@@ -46,7 +45,7 @@ export default function HomePage() {
         <section className="brandDirectory" aria-labelledby="brands-heading">
           <div className="directoryIntro">
             <h2 id="brands-heading">Browse by brand</h2>
-            <p>Every brand page follows the same order: inline catalogs, open prebooks, then its art library.</p>
+            <p>Every brand page follows the same order: inline catalogs, art library, then open prebooks.</p>
           </div>
           <div className="brandRows">
             {brands.map((brand, index) => {

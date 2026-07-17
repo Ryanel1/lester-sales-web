@@ -15,8 +15,8 @@ Customers normally arrive with a brand or selling opportunity already in mind. T
 ## Information architecture
 
 - The global navigation is organized by brand.
-- Every brand page repeats three sections in the same order: Inline Catalogs, Open Prebooks, Art Library.
-- A catalog is the primary object; its pricing sheets and programs stay visibly attached to it.
+- Every brand page repeats three sections in the same order: Inline Catalogs, Art Library, Open Prebooks.
+- A catalog is the primary object; its catalog/program files and pricing sheets stay visibly attached in two adjacent columns.
 - A prebook adds minimums, booking deadline, ship date, restrictions, catalog, price list, and workbook.
 - Every catalog, pricing, program, workbook, and art resource may use either a pasted company link or a managed upload.
 - Expired or unpublished entries do not appear in the customer portal.

@@ -26,7 +26,6 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
           <span>Lester</span> Sales
         </Link>
         <div className="accessIntroductionCopy">
-          <p className="accessContext">Customer resource library</p>
           <h1 id="access-title">Current sales tools, kept in one place.</h1>
           <p>Catalogs, pricing, open prebooks, and art resources for Lester Sales customers.</p>
         </div>

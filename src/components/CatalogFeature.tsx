@@ -3,6 +3,13 @@ import { ResourceLink } from "@/components/ResourceLink";
 import type { CatalogEntry } from "@/data/portal";
 
 export function CatalogFeature({ catalog, priority = false }: { catalog: CatalogEntry; priority?: boolean }) {
+  const catalogsAndPrograms = catalog.resources.filter((resource) => resource.kind !== "pricing");
+  const pricing = catalog.resources.filter((resource) => resource.kind === "pricing");
+  const resourceGroups = [
+    { label: "Catalogs & programs", resources: catalogsAndPrograms },
+    { label: "Pricing", resources: pricing },
+  ].filter((group) => group.resources.length > 0);
+
   return (
     <article className="catalogFeature">
       <div className="catalogCoverWell">
@@ -21,9 +28,16 @@ export function CatalogFeature({ catalog, priority = false }: { catalog: Catalog
         <p className="catalogSeason">{catalog.season}</p>
         <h3>{catalog.title}</h3>
         <p className="catalogSummary">{catalog.summary}</p>
-        <div className="resourceList" aria-label={`Resources for ${catalog.title}`}>
-          {catalog.resources.map((resource) => (
-            <ResourceLink key={resource.label} resource={resource} />
+        <div className="resourceColumns" aria-label={`Resources for ${catalog.title}`}>
+          {resourceGroups.map((group) => (
+            <section className="resourceColumn" key={group.label}>
+              <h4>{group.label}</h4>
+              <div className="resourceColumnList">
+                {group.resources.map((resource) => (
+                  <ResourceLink key={resource.label} resource={resource} />
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       </div>

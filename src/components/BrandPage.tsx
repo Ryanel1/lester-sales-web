@@ -21,7 +21,6 @@ export function BrandPage({ brand }: { brand: Brand }) {
       <main id="main-content" style={{ "--brand-accent": brand.accent } as React.CSSProperties}>
         <section className="brandIntro">
           <div className="brandIntroInner">
-            <p className="brandContext">Customer resource library</p>
             <h1>{brand.name}</h1>
             <p>{brand.shortDescription}</p>
           </div>
@@ -38,7 +37,6 @@ export function BrandPage({ brand }: { brand: Brand }) {
               <h2>Inline catalogs</h2>
               <p>Current in-stock collections and the files that support each assortment.</p>
             </div>
-            <span>{brand.inlineCatalogs.length} published</span>
           </div>
           {brand.inlineCatalogs.length ? (
             <div className="catalogStack">
@@ -57,7 +55,6 @@ export function BrandPage({ brand }: { brand: Brand }) {
               <h2>Art library</h2>
               <p>Reusable design collections organized around the way customers build assortments.</p>
             </div>
-            <span>{brand.artGroups.length} groups</span>
           </div>
           {brand.artGroups.length ? (
             <div className="artGroups">

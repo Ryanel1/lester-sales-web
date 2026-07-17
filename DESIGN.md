@@ -9,9 +9,9 @@ The physical scene is a buyer opening the site on a laptop during a meeting and 
 - Header: white, sticky, concise horizontal brand navigation, and a restrained active state.
 - Workspace: true cool off-white, no beige or decorative gradients.
 - Type: Public Sans only; hierarchy comes from weight, spacing, and scale.
-- Catalog composition: merchandise cover beside concise context and a row of compact, familiar document controls.
+- Catalog composition: merchandise cover beside concise context and two compact document columns—Catalogs & Programs, then Pricing.
 - Prebooks: use the same surface vocabulary with clear status and deadline treatment rather than a separate visual theme.
-- Art library: compact text links grouped by subject; no decorative card grid.
+- Art library: compact, equal-width document rows arranged in a restrained responsive grid and grouped by subject; no decorative card grid.
 - Corners: 9-11px on content surfaces; pills only for status.
 - Motion: 160-220ms state transitions only, with a reduced-motion alternative.
 - Responsive: brand navigation scrolls horizontally and catalog compositions stack before text becomes cramped.
