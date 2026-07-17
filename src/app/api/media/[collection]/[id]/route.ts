@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isPrebookOpen, isPublicationLive } from "@/lib/publication";
+import { logServerEvent } from "@/lib/server-log";
 import { createPortalAdminClient } from "@/lib/supabase/server";
 
 const mediaTables = {
@@ -14,6 +15,12 @@ const mediaTables = {
     prefix: "hero",
   },
 } as const;
+
+function cachedPrivateRedirect(url: string, maxAge: number) {
+  const response = NextResponse.redirect(url, 307);
+  response.headers.set("Cache-Control", `private, max-age=${maxAge}`);
+  return response;
+}
 
 export async function GET(
   _request: Request,
@@ -30,6 +37,7 @@ export async function GET(
   const config = mediaTables[collection as keyof typeof mediaTables];
   const publicationFields = collection === "prebook" ? ",status,publish_at,deadline" : ",status,publish_at";
   const { data, error } = await client.from(config.table).select(`${config.fields}${publicationFields}`).eq("id", id).maybeSingle();
+  if (error) logServerEvent("error", { event: "portal_media_record_read_failed", context: { collection, id }, error });
   if (error || !data) return NextResponse.json({ error: "Image not found." }, { status: 404 });
 
   const row = data as unknown as Record<string, string | null>;
@@ -41,14 +49,15 @@ export async function GET(
   const bucket = row[`${config.prefix}_storage_bucket`];
   const path = row[`${config.prefix}_storage_path`];
 
-  if (sourceType === "external_url" && externalUrl) return NextResponse.redirect(externalUrl, 307);
+  if (sourceType === "external_url" && externalUrl) return cachedPrivateRedirect(externalUrl, 600);
   if (sourceType !== "storage_object" || !bucket || !path) {
     return NextResponse.json({ error: "Image is unavailable." }, { status: 404 });
   }
 
-  const { data: signed, error: signedError } = await client.storage.from(bucket).createSignedUrl(path, 60);
+  const { data: signed, error: signedError } = await client.storage.from(bucket).createSignedUrl(path, 300);
   if (signedError || !signed?.signedUrl) {
+    logServerEvent("error", { event: "portal_media_signing_failed", context: { collection, id, bucket }, error: signedError });
     return NextResponse.json({ error: "Image is temporarily unavailable." }, { status: 503 });
   }
-  return NextResponse.redirect(signed.signedUrl, 307);
+  return cachedPrivateRedirect(signed.signedUrl, 240);
 }

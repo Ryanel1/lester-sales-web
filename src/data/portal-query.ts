@@ -1,6 +1,15 @@
+import { unstable_cache } from "next/cache";
 import { brandBySlug, type ArtGroup, type Brand, type CatalogEntry, type PortalResource, type PrebookEntry } from "@/data/portal";
 import { isPrebookOpen, isPublicationLive } from "@/lib/publication";
+import { logServerEvent } from "@/lib/server-log";
 import { createPortalAdminClient } from "@/lib/supabase/server";
+
+export class PortalDataUnavailableError extends Error {
+  constructor(message = "The customer resource library is temporarily unavailable.", options?: ErrorOptions) {
+    super(message, options);
+    this.name = "PortalDataUnavailableError";
+  }
+}
 
 type ResourceRow = {
   id: string;
@@ -26,16 +35,24 @@ function mapResources(rows: ResourceRow[], collection: "catalog" | "prebook" | "
 }
 
 async function readBrand(slug: string): Promise<Brand | undefined> {
-  const fallback = brandBySlug(slug);
   const client = createPortalAdminClient();
-  if (!client) return fallback;
+  if (!client) {
+    if (process.env.PORTAL_E2E_FIXTURES === "1") return brandBySlug(slug);
+    const error = new PortalDataUnavailableError("The customer resource library is not configured.");
+    logServerEvent("error", { event: "portal_content_configuration_missing", context: { slug }, error });
+    throw error;
+  }
 
   const { data: brand, error: brandError } = await client
     .from("portal_brands")
     .select("id,slug,name,nav_label,short_description,accent")
     .eq("slug", slug)
     .maybeSingle();
-  if (brandError || !brand) return fallback;
+  if (brandError) {
+    logServerEvent("error", { event: "portal_brand_read_failed", context: { slug }, error: brandError });
+    throw new PortalDataUnavailableError(undefined, { cause: brandError });
+  }
+  if (!brand) return undefined;
 
   const [catalogResult, prebookResult, artGroupResult] = await Promise.all([
     client
@@ -55,7 +72,11 @@ async function readBrand(slug: string): Promise<Brand | undefined> {
       .order("display_order"),
   ]);
 
-  if (catalogResult.error || prebookResult.error || artGroupResult.error) return fallback;
+  const contentError = catalogResult.error ?? prebookResult.error ?? artGroupResult.error;
+  if (contentError) {
+    logServerEvent("error", { event: "portal_brand_content_read_failed", context: { slug, brandId: brand.id }, error: contentError });
+    throw new PortalDataUnavailableError(undefined, { cause: contentError });
+  }
 
   const now = Date.now();
   const inlineCatalogs: CatalogEntry[] = (catalogResult.data ?? [])
@@ -121,4 +142,11 @@ async function readBrand(slug: string): Promise<Brand | undefined> {
   };
 }
 
-export const getPublishedBrand = readBrand;
+const getCachedPublishedBrand = unstable_cache(readBrand, ["portal-published-brand"], {
+  revalidate: 60,
+  tags: ["portal-content"],
+});
+
+export function getPublishedBrand(slug: string) {
+  return getCachedPublishedBrand(slug);
+}

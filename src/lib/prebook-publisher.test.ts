@@ -14,3 +14,12 @@ test("prebook publishing requires dates, booking details, and the three core fil
   assert.throws(() => prebookResourceRows(rows.slice(0, 2)), /catalog, price list, and workbook/i);
   assert.throws(() => prebookRecord({ brandId, title: "Past", slug: "past", deadline: "2026-01-01", shipDate: "Spring", minimums: "12", status: "published", hero: { sourceType: "external_url", externalUrl: "https://company.example/hero.jpg" } }, Date.parse("2026-07-16")), /passed deadline/i);
 });
+
+test("a scheduled prebook must publish before its deadline", () => {
+  const base = { brandId, title: "Fall booking", slug: "fall-booking", shipDate: "Spring", minimums: "12", hero: { sourceType: "external_url", externalUrl: "https://company.example/hero.jpg" } };
+  const now = Date.parse("2026-07-17T15:00:00.000Z");
+  const record = prebookRecord({ ...base, deadline: "2026-08-01T15:00:00.000Z", status: "scheduled", publishAt: "2026-07-20T15:00:00.000Z" }, now);
+  assert.equal(record.status, "scheduled");
+  assert.equal(record.publish_at, "2026-07-20T15:00:00.000Z");
+  assert.throws(() => prebookRecord({ ...base, deadline: "2026-07-19T15:00:00.000Z", status: "scheduled", publishAt: "2026-07-20T15:00:00.000Z" }, now), /before its booking deadline/i);
+});

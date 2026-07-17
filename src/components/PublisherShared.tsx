@@ -16,6 +16,12 @@ const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 export function emptySource(): SourceDraft { return { mode: "external_url", url: "", file: null, storageBucket: "", storagePath: "", originalFilename: "", mimeType: "", byteSize: null }; }
 export function slugify(value: string) { return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
 export function rowSource(row: StoredResource): SourceDraft { return { mode: row.source_type, url: row.external_url ?? "", file: null, storageBucket: row.storage_bucket ?? "", storagePath: row.storage_path ?? "", originalFilename: row.original_filename ?? "", mimeType: row.mime_type ?? "", byteSize: row.byte_size }; }
+export function localDateTime(value: string | null | undefined) { const date = new Date(value ?? ""); const offset = date.getTimezoneOffset() * 60_000; return Number.isNaN(date.valueOf()) ? "" : new Date(date.valueOf() - offset).toISOString().slice(0, 16); }
+export function scheduleDescription(value: string | null | undefined) { const date = new Date(value ?? ""); return Number.isNaN(date.valueOf()) ? "" : new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(date); }
+
+export function PublisherScheduleField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  return <label>Schedule publication (optional)<input onChange={(event) => onChange(event.target.value)} type="datetime-local" value={value} /><small>Set a future local date and time, then choose Schedule. Publish now remains immediate.</small></label>;
+}
 
 export function usePublisherSession() {
   const client = useMemo(() => supabaseUrl && publishableKey ? createClient(supabaseUrl, publishableKey) : null, []);

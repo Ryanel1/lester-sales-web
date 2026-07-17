@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { authorizePortalAdmin, isAdminAuthFailure } from "@/lib/admin-auth";
 import { catalogRecord, catalogResourceRows, type CatalogResourceInput } from "@/lib/catalog-publisher";
+import { logServerEvent } from "@/lib/server-log";
+import { cleanupManagedObjects, collectManagedObjectRefs } from "@/lib/storage-cleanup";
 import { createPortalAdminClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
@@ -11,7 +14,7 @@ export async function GET(request: NextRequest) {
   const [brands, catalogs] = await Promise.all([
     client.from("portal_brands").select("id,slug,name").order("display_order"),
     client.from("portal_catalogs")
-      .select("id,brand_id,slug,title,season,summary,image_alt,status,display_order,updated_at,cover_source_type,cover_external_url,cover_storage_bucket,cover_storage_path,cover_original_filename,cover_mime_type,cover_byte_size,portal_brands(name),portal_catalog_resources(id,label,kind,source_type,external_url,storage_bucket,storage_path,original_filename,mime_type,byte_size,display_order)")
+      .select("id,brand_id,slug,title,season,summary,image_alt,status,publish_at,display_order,updated_at,cover_source_type,cover_external_url,cover_storage_bucket,cover_storage_path,cover_original_filename,cover_mime_type,cover_byte_size,portal_brands(name),portal_catalog_resources(id,label,kind,source_type,external_url,storage_bucket,storage_path,original_filename,mime_type,byte_size,display_order)")
       .order("display_order")
       .order("updated_at", { ascending: false }),
   ]);
@@ -39,15 +42,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Resource source is invalid." }, { status: 400 });
   }
 
-  const { data: orderRows } = await client.from("portal_catalogs").select("display_order").eq("brand_id", record.brand_id).order("display_order", { ascending: false }).limit(1);
-  const displayOrder = (orderRows?.[0]?.display_order ?? 0) + 10;
-  const { data: catalog, error: catalogError } = await client.from("portal_catalogs").insert({ ...record, display_order: displayOrder }).select("id").single();
-  if (catalogError || !catalog) return NextResponse.json({ error: catalogError?.message ?? "Unable to save catalog." }, { status: 409 });
-
-  const { error: resourceError } = await client.from("portal_catalog_resources").insert(resources.map((resource) => ({ ...resource, catalog_id: catalog.id })));
-  if (resourceError) {
-    await client.from("portal_catalogs").delete().eq("id", catalog.id);
-    return NextResponse.json({ error: resourceError.message }, { status: 409 });
+  const { data: catalogId, error } = await client.rpc("portal_save_catalog", {
+    p_id: null,
+    p_record: record,
+    p_resources: resources,
+  });
+  if (error || typeof catalogId !== "string") {
+    logServerEvent("error", { event: "portal_catalog_create_failed", error, context: { brandId: record.brand_id } });
+    await cleanupManagedObjects(client, collectManagedObjectRefs(record, "cover_", resources), { operation: "catalog_create_rollback" });
+    return NextResponse.json({ error: error?.message ?? "Unable to save catalog." }, { status: 409 });
   }
-  return NextResponse.json({ id: catalog.id, status: record.status }, { status: 201 });
+  revalidateTag("portal-content", "max");
+  return NextResponse.json({ id: catalogId, status: record.status }, { status: 201 });
 }

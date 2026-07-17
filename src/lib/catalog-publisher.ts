@@ -17,6 +17,39 @@ export type CatalogResourceInput = CatalogSourceInput & {
 const allowedKinds = new Set(["catalog", "pricing", "program", "workbook"]);
 const allowedBuckets = new Set(["portal-documents", "portal-media"]);
 
+export type EditablePublicationStatus = "draft" | "scheduled" | "published";
+
+export function validateFuturePublishAt(value: unknown, now = Date.now()) {
+  const publishAt = typeof value === "string" ? value.trim() : "";
+  const publishTime = Date.parse(publishAt);
+  if (!publishAt || !Number.isFinite(publishTime) || publishTime <= now) {
+    throw new Error("Choose a publication time in the future.");
+  }
+  return new Date(publishTime).toISOString();
+}
+
+export function publicationFields(body: Record<string, unknown>, now = Date.now()) {
+  const status: EditablePublicationStatus = body.status === "published"
+    ? "published"
+    : body.status === "scheduled"
+      ? "scheduled"
+      : "draft";
+
+  if (status === "scheduled") {
+    return {
+      status,
+      publish_at: validateFuturePublishAt(body.publishAt, now),
+      published_at: null,
+    };
+  }
+
+  return {
+    status,
+    publish_at: null,
+    published_at: status === "published" ? new Date(now).toISOString() : null,
+  };
+}
+
 export function catalogSourceFields(source: CatalogSourceInput, prefix = "") {
   const sourceType = source.sourceType === "storage_object" ? "storage_object" : "external_url";
   const externalUrl = typeof source.externalUrl === "string" ? source.externalUrl.trim() : "";
@@ -63,11 +96,11 @@ export function catalogResourceRows(primary: CatalogResourceInput, attachments: 
   });
 }
 
-export function catalogRecord(body: Record<string, unknown>) {
+export function catalogRecord(body: Record<string, unknown>, now = Date.now()) {
   const brandId = typeof body.brandId === "string" ? body.brandId : "";
   const title = typeof body.title === "string" ? body.title.trim() : "";
   const slug = typeof body.slug === "string" ? body.slug.trim() : "";
-  const status = body.status === "published" ? "published" : "draft";
+  const publication = publicationFields(body, now);
   if (!/^[0-9a-f-]{36}$/i.test(brandId) || !title || title.length > 180 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
     throw new Error("Brand, title, and URL slug are required.");
   }
@@ -78,8 +111,7 @@ export function catalogRecord(body: Record<string, unknown>) {
     season: typeof body.season === "string" ? body.season.trim() : "",
     summary: typeof body.summary === "string" ? body.summary.trim() : "",
     image_alt: typeof body.imageAlt === "string" && body.imageAlt.trim() ? body.imageAlt.trim() : `Cover of ${title}`,
-    status,
-    published_at: status === "published" ? new Date().toISOString() : null,
+    ...publication,
     archived_at: null,
     ...catalogSourceFields((body.cover ?? {}) as CatalogSourceInput, "cover_"),
   };

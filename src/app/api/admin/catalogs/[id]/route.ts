@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { authorizePortalAdmin, isAdminAuthFailure } from "@/lib/admin-auth";
 import { catalogRecord, catalogResourceRows, type CatalogResourceInput } from "@/lib/catalog-publisher";
+import { logServerEvent } from "@/lib/server-log";
+import { cleanupManagedObjects, collectManagedObjectRefs, staleManagedObjectRefs } from "@/lib/storage-cleanup";
 import { createPortalAdminClient } from "@/lib/supabase/server";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -29,22 +32,21 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Catalog is invalid." }, { status: 400 });
   }
 
-  const { data: existing, error: existingError } = await client.from("portal_catalogs").select("id").eq("id", id).maybeSingle();
+  const { data: existing, error: existingError } = await client.from("portal_catalogs")
+    .select("id,cover_source_type,cover_storage_bucket,cover_storage_path,portal_catalog_resources(source_type,storage_bucket,storage_path)")
+    .eq("id", id).maybeSingle();
   if (existingError || !existing) return NextResponse.json({ error: "Catalog not found." }, { status: 404 });
 
-  const { error: catalogError } = await client.from("portal_catalogs").update(record).eq("id", id);
-  if (catalogError) return NextResponse.json({ error: catalogError.message }, { status: 409 });
-
-  const resourceIds: string[] = [];
-  for (const resource of resources) {
-    const { data: saved, error } = await client.from("portal_catalog_resources").upsert({ ...resource, catalog_id: id }).select("id").single();
-    if (error || !saved) return NextResponse.json({ error: error?.message ?? "Unable to save a resource." }, { status: 409 });
-    resourceIds.push(saved.id);
+  const previousRefs = collectManagedObjectRefs(existing, "cover_", existing.portal_catalog_resources ?? []);
+  const currentRefs = collectManagedObjectRefs(record, "cover_", resources);
+  const { error: saveError } = await client.rpc("portal_save_catalog", { p_id: id, p_record: record, p_resources: resources });
+  if (saveError) {
+    logServerEvent("error", { event: "portal_catalog_update_failed", error: saveError, context: { catalogId: id } });
+    await cleanupManagedObjects(client, staleManagedObjectRefs(currentRefs, previousRefs), { operation: "catalog_update_rollback", catalogId: id });
+    return NextResponse.json({ error: saveError.message }, { status: 409 });
   }
-  let staleQuery = client.from("portal_catalog_resources").delete().eq("catalog_id", id);
-  if (resourceIds.length) staleQuery = staleQuery.not("id", "in", `(${resourceIds.join(",")})`);
-  const { error: staleError } = await staleQuery;
-  if (staleError) return NextResponse.json({ error: staleError.message }, { status: 409 });
+  await cleanupManagedObjects(client, staleManagedObjectRefs(previousRefs, currentRefs), { operation: "catalog_update", catalogId: id });
+  revalidateTag("portal-content", "max");
   return NextResponse.json({ id, status: record.status });
 }
 
@@ -68,6 +70,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
     slug,
     title: `${catalog.title} copy`,
     status: "draft",
+    publish_at: null,
     published_at: null,
     archived_at: null,
     display_order: catalog.display_order + 1,
@@ -84,6 +87,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
       return NextResponse.json({ error: resourcesError.message }, { status: 409 });
     }
   }
+  revalidateTag("portal-content", "max");
   return NextResponse.json({ id: duplicate.id }, { status: 201 });
 }
 
@@ -99,36 +103,40 @@ export async function DELETE(request: NextRequest, { params }: RouteContext) {
   if (catalog.status === "published" || catalog.status === "scheduled") {
     return NextResponse.json({ error: "Archive or unpublish this catalog before permanently deleting it." }, { status: 409 });
   }
+  const { data: stored } = await client.from("portal_catalogs")
+    .select("cover_source_type,cover_storage_bucket,cover_storage_path,portal_catalog_resources(source_type,storage_bucket,storage_path)")
+    .eq("id", id).maybeSingle();
   const { error } = await client.from("portal_catalogs").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 409 });
+  if (stored) await cleanupManagedObjects(client, collectManagedObjectRefs(stored, "cover_", stored.portal_catalog_resources ?? []), { operation: "catalog_delete", catalogId: id });
+  revalidateTag("portal-content", "max");
   return NextResponse.json({ deleted: true });
 }
 
 async function lifecycleAction(client: NonNullable<ReturnType<typeof createPortalAdminClient>>, id: string, action: string) {
   if (action === "publish") {
-    const { error } = await client.from("portal_catalogs").update({ status: "published", published_at: new Date().toISOString(), archived_at: null }).eq("id", id);
-    return error ? NextResponse.json({ error: error.message }, { status: 409 }) : NextResponse.json({ status: "published" });
+    const { error } = await client.from("portal_catalogs").update({ status: "published", publish_at: null, published_at: new Date().toISOString(), archived_at: null }).eq("id", id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 409 });
+    revalidateTag("portal-content", "max");
+    return NextResponse.json({ status: "published" });
   }
   if (action === "unpublish") {
-    const { error } = await client.from("portal_catalogs").update({ status: "draft", published_at: null, archived_at: null }).eq("id", id);
-    return error ? NextResponse.json({ error: error.message }, { status: 409 }) : NextResponse.json({ status: "draft" });
+    const { error } = await client.from("portal_catalogs").update({ status: "draft", publish_at: null, published_at: null, archived_at: null }).eq("id", id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 409 });
+    revalidateTag("portal-content", "max");
+    return NextResponse.json({ status: "draft" });
   }
   if (action === "archive") {
-    const { error } = await client.from("portal_catalogs").update({ status: "archived", archived_at: new Date().toISOString() }).eq("id", id);
-    return error ? NextResponse.json({ error: error.message }, { status: 409 }) : NextResponse.json({ status: "archived" });
+    const { error } = await client.from("portal_catalogs").update({ status: "archived", publish_at: null, archived_at: new Date().toISOString() }).eq("id", id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 409 });
+    revalidateTag("portal-content", "max");
+    return NextResponse.json({ status: "archived" });
   }
   if (action === "move_up" || action === "move_down") {
-    const { data: current } = await client.from("portal_catalogs").select("id,brand_id,display_order").eq("id", id).maybeSingle();
-    if (!current) return NextResponse.json({ error: "Catalog not found." }, { status: 404 });
-    let query = client.from("portal_catalogs").select("id,display_order").eq("brand_id", current.brand_id);
-    query = action === "move_up"
-      ? query.lt("display_order", current.display_order).order("display_order", { ascending: false }).limit(1)
-      : query.gt("display_order", current.display_order).order("display_order").limit(1);
-    const { data: adjacent } = await query;
-    if (!adjacent?.[0]) return NextResponse.json({ status: "unchanged" });
-    await client.from("portal_catalogs").update({ display_order: current.display_order }).eq("id", adjacent[0].id);
-    const { error } = await client.from("portal_catalogs").update({ display_order: adjacent[0].display_order }).eq("id", current.id);
-    return error ? NextResponse.json({ error: error.message }, { status: 409 }) : NextResponse.json({ status: "reordered" });
+    const { data: status, error } = await client.rpc("portal_reorder_catalog", { p_id: id, p_direction: action === "move_up" ? "up" : "down" });
+    if (error) return NextResponse.json({ error: error.message }, { status: 409 });
+    if (status === "reordered") revalidateTag("portal-content", "max");
+    return NextResponse.json({ status });
   }
   return NextResponse.json({ error: "Catalog action is invalid." }, { status: 400 });
 }

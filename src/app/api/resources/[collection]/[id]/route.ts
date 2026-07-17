@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isPrebookOpen, isPublicationLive } from "@/lib/publication";
+import { logServerEvent } from "@/lib/server-log";
 import { createPortalAdminClient } from "@/lib/supabase/server";
 
 const resourceTables = {
@@ -7,6 +8,12 @@ const resourceTables = {
   catalog: { table: "portal_catalog_resources", parentId: "catalog_id", parentTable: "portal_catalogs" },
   prebook: { table: "portal_prebook_resources", parentId: "prebook_id", parentTable: "portal_prebooks" },
 } as const;
+
+function cachedPrivateRedirect(url: string, maxAge: number) {
+  const response = NextResponse.redirect(url, 307);
+  response.headers.set("Cache-Control", `private, max-age=${maxAge}`);
+  return response;
+}
 
 export async function GET(
   _request: Request,
@@ -26,6 +33,7 @@ export async function GET(
     .select(`source_type,external_url,storage_bucket,storage_path,${config.parentId}`)
     .eq("id", id)
     .maybeSingle();
+  if (error) logServerEvent("error", { event: "portal_resource_record_read_failed", context: { collection, id }, error });
   if (error || !data) return NextResponse.json({ error: "Resource not found." }, { status: 404 });
 
   const resource = data as unknown as Record<string, string | null>;
@@ -44,11 +52,12 @@ export async function GET(
     || !isPublicationLive(publication.status, publication.publish_at ?? null)
     || (publication.deadline && !isPrebookOpen(publication.deadline))
   ) {
+    if (parentError) logServerEvent("error", { event: "portal_resource_parent_read_failed", context: { collection, id, parentId }, error: parentError });
     return NextResponse.json({ error: "Resource not found." }, { status: 404 });
   }
 
   if (resource.source_type === "external_url" && resource.external_url) {
-    return NextResponse.redirect(resource.external_url, 307);
+    return cachedPrivateRedirect(resource.external_url, 600);
   }
   if (resource.source_type !== "storage_object" || !resource.storage_bucket || !resource.storage_path) {
     return NextResponse.json({ error: "Resource is unavailable." }, { status: 404 });
@@ -56,10 +65,11 @@ export async function GET(
 
   const { data: signed, error: signedError } = await client.storage
     .from(resource.storage_bucket)
-    .createSignedUrl(resource.storage_path, 60);
+    .createSignedUrl(resource.storage_path, 300);
   if (signedError || !signed?.signedUrl) {
+    logServerEvent("error", { event: "portal_resource_signing_failed", context: { collection, id, bucket: resource.storage_bucket }, error: signedError });
     return NextResponse.json({ error: "Resource is temporarily unavailable." }, { status: 503 });
   }
 
-  return NextResponse.redirect(signed.signedUrl, 307);
+  return cachedPrivateRedirect(signed.signedUrl, 240);
 }

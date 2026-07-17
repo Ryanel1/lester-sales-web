@@ -67,7 +67,7 @@ export default function HomePage() {
 
         <section aria-label="Brand partners" className="portfolioShowcase">
           <div className="portfolioGrid">
-            {portfolioBrands.map((brand) => (
+            {portfolioBrands.map((brand, index) => (
               <Link
                 aria-label={`Explore ${brand.name} resources`}
                 className={`portfolioBrand ${brand.className}`}
@@ -78,7 +78,7 @@ export default function HomePage() {
                   <Image
                     alt={brand.imageAlt}
                     height={brand.height}
-                    priority
+                    priority={index === 0}
                     sizes="(max-width: 760px) 72vw, (max-width: 1100px) 38vw, 420px"
                     src={brand.image}
                     width={brand.width}

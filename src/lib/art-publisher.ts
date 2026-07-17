@@ -1,4 +1,4 @@
-import { catalogSourceFields, type CatalogResourceInput } from "./catalog-publisher";
+import { catalogSourceFields, publicationFields, type CatalogResourceInput } from "./catalog-publisher";
 
 export type ArtResourceInput = CatalogResourceInput;
 
@@ -20,16 +20,14 @@ export function artResourceRows(resources: ArtResourceInput[]) {
   });
 }
 
-export function artGroupRecord(body: Record<string, unknown>) {
+export function artGroupRecord(body: Record<string, unknown>, now = Date.now()) {
   const brandId = typeof body.brandId === "string" ? body.brandId : "";
   const title = typeof body.title === "string" ? body.title.trim() : "";
-  const status = body.status === "published" ? "published" : "draft";
   if (!/^[0-9a-f-]{36}$/i.test(brandId) || !title || title.length > 180) throw new Error("Brand and group title are required.");
   return {
     brand_id: brandId,
     title,
-    status,
-    published_at: status === "published" ? new Date().toISOString() : null,
+    ...publicationFields(body, now),
     archived_at: null,
   };
 }

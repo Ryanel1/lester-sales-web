@@ -1,6 +1,7 @@
 import { CatalogFeature } from "@/components/CatalogFeature";
 import { PrebookFeature } from "@/components/PrebookFeature";
 import { ResourceLink } from "@/components/ResourceLink";
+import { SectionNav } from "@/components/SectionNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import type { Brand } from "@/data/portal";
@@ -24,11 +25,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
             <h1>{brand.name}</h1>
             <p>{brand.shortDescription}</p>
           </div>
-          <nav aria-label={`${brand.name} page sections`} className="sectionNav">
-            <a href="#inline">Inline catalogs</a>
-            <a href="#art-library">Art library</a>
-            <a href="#prebooks">Open prebooks</a>
-          </nav>
+          <SectionNav brandName={brand.name} />
         </section>
 
         <section className="portalSection inlineSection" id="inline">

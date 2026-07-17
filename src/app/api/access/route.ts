@@ -7,7 +7,8 @@ import {
   PORTAL_SESSION_TTL_SECONDS,
   safeReturnPath,
 } from "@/lib/portal-auth";
-import { clearFailedAccess, isAccessBlocked, recordFailedAccess } from "@/lib/access-rate-limit";
+import { clearFailedAccessDurable, isAccessBlockedDurable, recordFailedAccessDurable } from "@/lib/access-rate-limit";
+import { logServerEvent } from "@/lib/server-log";
 
 function accessRedirect(request: Request, params: Record<string, string>) {
   const url = new URL("/access", request.url);
@@ -17,7 +18,7 @@ function accessRedirect(request: Request, params: Record<string, string>) {
 
 export async function POST(request: Request) {
   const clientKey = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (isAccessBlocked(clientKey)) return accessRedirect(request, { error: "rate-limit" });
+  if (await isAccessBlockedDurable(clientKey)) return accessRedirect(request, { error: "rate-limit" });
   const formData = await request.formData();
   const password = formData.get("password");
   const returnPath = safeReturnPath(formData.get("next"));
@@ -28,12 +29,12 @@ export async function POST(request: Request) {
 
   const isValid = typeof password === "string" && password.length <= 512 && await passwordMatches(password, config.password, config.secret);
   if (!isValid) {
-    const attempt = recordFailedAccess(clientKey);
-    console.warn(JSON.stringify({ event: "portal_access_failed", attempts: attempt.count, at: new Date().toISOString() }));
+    const attempt = await recordFailedAccessDurable(clientKey);
+    logServerEvent("warn", { event: "portal_access_failed", context: { attempts: attempt.count } });
     return accessRedirect(request, { error: "invalid", next: returnPath });
   }
 
-  clearFailedAccess(clientKey);
+  await clearFailedAccessDurable(clientKey);
 
   const response = NextResponse.redirect(new URL(returnPath, request.url), 303);
   response.cookies.set({

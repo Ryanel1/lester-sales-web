@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authorizePortalAdmin, isAdminAuthFailure } from "@/lib/admin-auth";
+import { logServerEvent } from "@/lib/server-log";
 import { createPortalAdminClient } from "@/lib/supabase/server";
 
 const allowedBuckets = new Set(["portal-documents", "portal-media"]);
@@ -21,6 +22,9 @@ export async function POST(request: NextRequest) {
   const client = createPortalAdminClient();
   if (!client) return NextResponse.json({ error: "Upload service unavailable." }, { status: 503 });
   const { data, error } = await client.storage.from(bucket).createSignedUploadUrl(path);
-  if (error || !data) return NextResponse.json({ error: "Unable to prepare the upload." }, { status: 503 });
+  if (error || !data) {
+    logServerEvent("error", { event: "portal_upload_prepare_failed", context: { bucket, byteSize }, error });
+    return NextResponse.json({ error: "Unable to prepare the upload." }, { status: 503 });
+  }
   return NextResponse.json({ bucket, path, token: data.token });
 }

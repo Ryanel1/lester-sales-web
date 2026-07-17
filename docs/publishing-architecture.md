@@ -42,11 +42,17 @@ Reliable company-hosted resources do not need to be duplicated. Supabase stores 
 
 Files or links already present in another product are not read across project boundaries. Reuse requires either the original stable company URL or an explicit one-time copy into LesterSales.net Storage. No foreign table, bucket, service-role key, or API becomes a LesterSales.net dependency.
 
+Publisher saves call dedicated `portal_save_catalog`, `portal_save_prebook`, and `portal_save_art_group` database functions. Each function writes the parent and its complete resource set in one transaction, so customers never see a half-finished save. Reorders use matching transactional functions. Successful mutations invalidate the short-lived `portal-content` cache.
+
+When an edit replaces a managed object or a permanent delete removes its last record, the server checks every LesterSales.net table before deleting the private Storage object. Objects still referenced by duplicates or another record are retained. Cleanup errors are logged and can be reconciled without undoing the successfully committed content change.
+
 ## Current portal access
 
 The Supabase-backed portal uses a shared customer password on the server and a signed, HTTP-only 12-hour session cookie. Pages and downloadable resource files are checked before delivery. Managed catalog covers and prebook hero images are delivered through protected, short-lived Supabase URLs.
 
 Production requires both `PORTAL_PASSWORD` and `PORTAL_SESSION_SECRET` and fails closed when either is missing. Rotate the session secret whenever all active customer sessions should be invalidated.
+
+Failed password attempts use the dedicated Supabase `portal_access_attempts` table so the temporary limit survives serverless restarts and applies across instances. Client addresses are HMAC-hashed before storage. An instance-local limiter remains as a safe fallback during a database outage.
 
 This is intentionally a low-friction shared-password gate for deterring casual and competitor browsing. It is not customer identity, authorization, or a promise that externally hosted company links remain private after opening. Customer accounts, password recovery, per-user permissions, and access auditing are out of scope unless business requirements change.
 
@@ -61,3 +67,5 @@ This is intentionally a low-friction shared-password gate for deterring casual a
 7. Cut over `lestersales.net` and `www.lestersales.net` to the standalone Vercel project while preserving Google Workspace, order-email, Domain Connect, and SalesLens DNS records.
 
 See `docs/live-content-inventory.md` for the verified published-page scope and file-selection rules.
+
+See `docs/operations-runbook.md` for backup policy, deployment order, incident response, and recovery drills.

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authorizePortalAdmin, isAdminAuthFailure } from "@/lib/admin-auth";
 import { checkExternalLink } from "@/lib/link-health";
+import { logServerEvent } from "@/lib/server-log";
 import { createPortalAdminClient } from "@/lib/supabase/server";
 
 const sources = ["portal_catalog_resources", "portal_prebook_resources", "portal_art_resources"] as const;
@@ -27,14 +28,20 @@ export async function POST(request: NextRequest) {
   const jobs = queryResults.flatMap((result, index) => (result.data ?? []).map((row) => ({ table: sources[index], ...row })));
   const checkedAt = new Date().toISOString();
   const checked: Array<{ status: string; httpStatus: number | null }> = [];
+  let failedUpdates = 0;
   for (let index = 0; index < jobs.length; index += 6) {
     const batch = jobs.slice(index, index + 6);
     const results = await Promise.all(batch.map(async (job) => ({ job, result: await checkExternalLink(job.external_url ?? "") })));
     for (const { job, result } of results) {
-      await client.from(job.table).update({ link_status: result.status, link_checked_at: checkedAt, source_note: `Automated check: ${result.httpStatus ?? "connection failed"}` }).eq("id", job.id);
+      const { error: updateError } = await client.from(job.table).update({ link_status: result.status, link_checked_at: checkedAt, source_note: `Automated check: ${result.httpStatus ?? "connection failed"}` }).eq("id", job.id);
+      if (updateError) {
+        failedUpdates += 1;
+        logServerEvent("error", { event: "portal_link_health_update_failed", context: { table: job.table, resourceId: job.id }, error: updateError });
+      }
       checked.push(result);
     }
   }
+  if (failedUpdates) return NextResponse.json({ error: `Unable to save ${failedUpdates} link check${failedUpdates === 1 ? "" : "s"}.` }, { status: 503 });
   return NextResponse.json({ ...summarize(checked.map((row) => ({ link_status: row.status, link_checked_at: checkedAt }))), checked: jobs.length });
 }
 

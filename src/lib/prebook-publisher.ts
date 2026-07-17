@@ -1,4 +1,4 @@
-import { catalogSourceFields, type CatalogResourceInput, type CatalogSourceInput } from "./catalog-publisher";
+import { catalogSourceFields, publicationFields, type CatalogResourceInput, type CatalogSourceInput } from "./catalog-publisher";
 
 const requiredKinds = new Set(["catalog", "pricing", "workbook"]);
 const allowedKinds = new Set(["catalog", "pricing", "program", "workbook"]);
@@ -35,7 +35,7 @@ export function prebookRecord(body: Record<string, unknown>, now = Date.now()) {
   const deadlineTime = Date.parse(deadline);
   const shipDate = typeof body.shipDate === "string" ? body.shipDate.trim() : "";
   const minimums = typeof body.minimums === "string" ? body.minimums.trim() : "";
-  const status = body.status === "published" ? "published" : "draft";
+  const publication = publicationFields(body, now);
   const details = Array.isArray(body.details)
     ? body.details.filter((value): value is string => typeof value === "string").map((value) => value.trim()).filter(Boolean)
     : [];
@@ -43,7 +43,10 @@ export function prebookRecord(body: Record<string, unknown>, now = Date.now()) {
     throw new Error("Brand, title, and URL slug are required.");
   }
   if (!Number.isFinite(deadlineTime) || !shipDate || !minimums) throw new Error("Deadline, ship date, and minimums are required.");
-  if (status === "published" && deadlineTime <= now) throw new Error("A prebook with a passed deadline cannot be published as open.");
+  if (publication.status === "published" && deadlineTime <= now) throw new Error("A prebook with a passed deadline cannot be published as open.");
+  if (publication.status === "scheduled" && deadlineTime <= Date.parse(publication.publish_at as string)) {
+    throw new Error("Schedule this prebook before its booking deadline.");
+  }
   if (details.length > 20 || details.some((detail) => detail.length > 300)) throw new Error("Use no more than 20 concise prebook details.");
   return {
     brand_id: brandId,
@@ -55,8 +58,7 @@ export function prebookRecord(body: Record<string, unknown>, now = Date.now()) {
     ship_date: shipDate,
     minimums,
     details,
-    status,
-    published_at: status === "published" ? new Date(now).toISOString() : null,
+    ...publication,
     archived_at: null,
     ...catalogSourceFields((body.hero ?? {}) as CatalogSourceInput, "hero_"),
   };

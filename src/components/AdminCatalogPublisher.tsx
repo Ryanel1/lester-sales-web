@@ -3,8 +3,8 @@
 import { createClient, type Session } from "@supabase/supabase-js";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { PublisherNav } from "@/components/PublisherShared";
-import { isTemporarySignedUrl } from "@/lib/catalog-publisher";
+import { localDateTime, PublisherNav, PublisherScheduleField, scheduleDescription } from "@/components/PublisherShared";
+import { isTemporarySignedUrl, validateFuturePublishAt } from "@/lib/catalog-publisher";
 
 type BrandOption = { id: string; name: string; slug: string };
 type SourceMode = "external_url" | "storage_object";
@@ -42,6 +42,7 @@ type CatalogSummary = {
   summary: string;
   image_alt: string;
   status: "draft" | "scheduled" | "published" | "archived";
+  publish_at: string | null;
   display_order: number;
   updated_at: string;
   cover_source_type: SourceMode | null;
@@ -98,6 +99,7 @@ export function AdminCatalogPublisher() {
   const [season, setSeason] = useState("Current inline collection");
   const [summary, setSummary] = useState("");
   const [imageAlt, setImageAlt] = useState("");
+  const [publishAt, setPublishAt] = useState("");
   const [cover, setCover] = useState<SourceDraft>(emptySource);
   const [catalogSource, setCatalogSource] = useState<SourceDraft>(emptySource);
   const [catalogResourceId, setCatalogResourceId] = useState<string>();
@@ -167,9 +169,16 @@ export function AdminCatalogPublisher() {
     event.preventDefault();
     if (!session) return;
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
-    const publicationStatus = submitter?.value === "published" ? "published" : "draft";
+    const publicationStatus = submitter?.value === "published" ? "published" : submitter?.value === "scheduled" ? "scheduled" : "draft";
+    let publishAtIso: string | null = null;
+    try {
+      if (publicationStatus === "scheduled") publishAtIso = validateFuturePublishAt(publishAt);
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Choose a future publication time.");
+      return;
+    }
     setBusy(true);
-    setStatusMessage(publicationStatus === "published" ? "Uploading and publishing…" : "Uploading and saving draft…");
+    setStatusMessage(publicationStatus === "published" ? "Uploading and publishing now…" : publicationStatus === "scheduled" ? "Uploading and scheduling…" : "Uploading and saving draft…");
     try {
       const [preparedCover, primaryResource, ...preparedAttachments] = await Promise.all([
         prepareSource(cover, "portal-media", session),
@@ -177,7 +186,7 @@ export function AdminCatalogPublisher() {
         ...attachments.map((attachment) => prepareSource(attachment.source, "portal-documents", session)),
       ]);
       const payload = {
-        brandId, title, slug, season, summary, imageAlt, status: publicationStatus,
+        brandId, title, slug, season, summary, imageAlt, status: publicationStatus, publishAt: publishAtIso,
         cover: preparedCover,
         catalogResource: { id: catalogResourceId, ...primaryResource },
         attachments: attachments.map((attachment, index) => ({ id: attachment.id, label: attachment.label, kind: attachment.kind, ...preparedAttachments[index] })),
@@ -189,7 +198,7 @@ export function AdminCatalogPublisher() {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Unable to save catalog.");
-      setStatusMessage(publicationStatus === "published" ? "Catalog published. The customer page is live now." : "Draft saved privately.");
+      setStatusMessage(publicationStatus === "published" ? "Catalog published. The customer page is live now." : publicationStatus === "scheduled" ? `Catalog scheduled for ${scheduleDescription(publishAtIso)}.` : "Draft saved privately.");
       resetForm();
       await loadCatalogs(session);
     } catch (error) {
@@ -210,6 +219,7 @@ export function AdminCatalogPublisher() {
     setSeason(catalog.season);
     setSummary(catalog.summary);
     setImageAlt(catalog.image_alt);
+    setPublishAt(localDateTime(catalog.publish_at));
     setCover({
       mode: catalog.cover_source_type ?? "external_url",
       url: catalog.cover_external_url ?? "",
@@ -237,7 +247,7 @@ export function AdminCatalogPublisher() {
   function resetForm() {
     setEditingId(null);
     setTitle(""); setSlug(""); setSlugEdited(false); setSummary(""); setImageAlt("");
-    setSeason("Current inline collection"); setCover(emptySource()); setCatalogSource(emptySource());
+    setSeason("Current inline collection"); setPublishAt(""); setCover(emptySource()); setCatalogSource(emptySource());
     setCatalogResourceId(undefined); setAttachments([]); setPreviewOpen(false);
   }
 
@@ -246,7 +256,9 @@ export function AdminCatalogPublisher() {
     const destructive = action === "delete" || action === "archive" || action === "unpublish";
     if (destructive && !window.confirm(action === "delete"
       ? `Permanently delete “${catalog.title}”? This cannot be undone.`
-      : `${action === "archive" ? "Archive" : "Unpublish"} “${catalog.title}”? It will leave the customer site immediately.`)) return;
+      : action === "unpublish" && catalog.status === "scheduled"
+        ? `Unschedule “${catalog.title}”? It will return to drafts.`
+        : `${action === "archive" ? "Archive" : "Unpublish"} “${catalog.title}”? It will leave the customer site immediately.`)) return;
     setBusy(true);
     setStatusMessage(`${action.replace("_", " ")} in progress…`);
     try {
@@ -317,6 +329,7 @@ export function AdminCatalogPublisher() {
               <label className="publisherFieldWide">Catalog title<input onChange={(event) => { const next = event.target.value; setTitle(next); if (!slugEdited) setSlug(slugify(next)); }} required value={title} /></label>
               <label>URL slug<input onChange={(event) => { setSlugEdited(true); setSlug(slugify(event.target.value)); }} pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required value={slug} /></label>
               <label>Cover description<input onChange={(event) => setImageAlt(event.target.value)} placeholder="Cover of…" value={imageAlt} /></label>
+              <PublisherScheduleField onChange={setPublishAt} value={publishAt} />
               <label className="publisherFieldWide">Summary<textarea onChange={(event) => setSummary(event.target.value)} required rows={4} value={summary} /></label>
             </div>
           </section>
@@ -328,12 +341,12 @@ export function AdminCatalogPublisher() {
           </section>
           <div className="publisherSubmitBar">
             <p aria-live="polite">{statusMessage || "Drafts stay private. Publish makes the catalog visible to customers."}</p>
-            <div><button onClick={() => setPreviewOpen((current) => !current)} type="button">{previewOpen ? "Hide preview" : "Preview"}</button><button disabled={busy} name="status" type="submit" value="draft">Save draft</button><button className="publisherPrimary" disabled={busy} name="status" type="submit" value="published">{editingId ? "Save & publish" : "Publish catalog"}</button></div>
+            <div><button onClick={() => setPreviewOpen((current) => !current)} type="button">{previewOpen ? "Hide preview" : "Preview"}</button><button disabled={busy} name="status" type="submit" value="draft">Save draft</button><button disabled={busy || !publishAt} name="status" type="submit" value="scheduled">{editingId ? "Save schedule" : "Schedule"}</button><button className="publisherPrimary" disabled={busy} name="status" type="submit" value="published">{editingId ? "Save & publish now" : "Publish now"}</button></div>
           </div>
         </form>
         <aside className="publisherLibrary">
           <div><p className="publisherEyebrow">Current library</p><h2>{catalogs.length} catalog{catalogs.length === 1 ? "" : "s"}</h2></div>
-          <div className="publisherCatalogRows">{catalogs.map((catalog) => <article key={catalog.id}><div className="publisherCatalogSummary"><div><strong>{catalog.title}</strong><span>{catalog.portal_brands?.name ?? "Brand"} · {catalog.season}</span></div><em data-status={catalog.status}>{catalog.status}</em></div><div className="publisherCatalogActions"><button disabled={busy} onClick={() => editCatalog(catalog)} type="button">Edit</button><button disabled={busy} onClick={() => editCatalog(catalog, true)} type="button">Preview</button><button disabled={busy} onClick={() => runAction(catalog, "duplicate")} type="button">Duplicate</button><button aria-label={`Move ${catalog.title} up`} disabled={busy} onClick={() => runAction(catalog, "move_up")} type="button">↑</button><button aria-label={`Move ${catalog.title} down`} disabled={busy} onClick={() => runAction(catalog, "move_down")} type="button">↓</button>{catalog.status === "published" ? <button disabled={busy} onClick={() => runAction(catalog, "unpublish")} type="button">Unpublish</button> : <button disabled={busy} onClick={() => runAction(catalog, "publish")} type="button">Publish</button>}<button disabled={busy} onClick={() => runAction(catalog, "archive")} type="button">Archive</button><button className="publisherDanger" disabled={busy} onClick={() => runAction(catalog, "delete")} type="button">Delete</button></div></article>)}</div>
+          <div className="publisherCatalogRows">{catalogs.map((catalog) => <article key={catalog.id}><div className="publisherCatalogSummary"><div><strong>{catalog.title}</strong><span suppressHydrationWarning>{catalog.portal_brands?.name ?? "Brand"} · {catalog.season}{catalog.status === "scheduled" ? ` · publishes ${scheduleDescription(catalog.publish_at)}` : ""}</span></div><em data-status={catalog.status}>{catalog.status}</em></div><div className="publisherCatalogActions"><button disabled={busy} onClick={() => editCatalog(catalog)} type="button">Edit</button><button disabled={busy} onClick={() => editCatalog(catalog, true)} type="button">Preview</button><button disabled={busy} onClick={() => runAction(catalog, "duplicate")} type="button">Duplicate</button><button aria-label={`Move ${catalog.title} up`} disabled={busy} onClick={() => runAction(catalog, "move_up")} type="button">↑</button><button aria-label={`Move ${catalog.title} down`} disabled={busy} onClick={() => runAction(catalog, "move_down")} type="button">↓</button>{catalog.status === "published" ? <button disabled={busy} onClick={() => runAction(catalog, "unpublish")} type="button">Unpublish</button> : catalog.status === "scheduled" ? <button disabled={busy} onClick={() => runAction(catalog, "unpublish")} type="button">Unschedule</button> : <button disabled={busy} onClick={() => runAction(catalog, "publish")} type="button">Publish now</button>}<button disabled={busy} onClick={() => runAction(catalog, "archive")} type="button">Archive</button><button className="publisherDanger" disabled={busy} onClick={() => runAction(catalog, "delete")} type="button">Delete</button></div></article>)}</div>
         </aside>
       </div>
     </main>
