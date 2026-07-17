@@ -562,7 +562,7 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
 .footerWordmark { font-size: 0.9375rem; font-weight: 800; text-decoration: none; }
 .siteFooter p { color: var(--text-soft); font-size: 0.75rem; line-height: 1.5; margin: 11px 0 0; max-width: 50ch; }
 .footerLinks { align-items: flex-end; display: flex; flex-direction: column; gap: 10px; }
-.footerLinks a, .footerLinks span { color: var(--text-soft); font-size: 0.75rem; }
+.footerLinks a { color: var(--text-soft); font-size: 0.75rem; }
 .footerLinks form { margin: 0; }
 .footerLinks button { background: transparent; border: 0; color: var(--text-soft); cursor: pointer; font: inherit; font-size: .75rem; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
 .footerLinks button:hover { color: var(--text); }
