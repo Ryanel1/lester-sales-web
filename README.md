@@ -32,7 +32,7 @@ Portal protection is bypassed in local development when no auth variables are se
 - Protected short-lived delivery for managed PDFs and cover images
 - Automated external-link checking; all 27 company-hosted URLs passed the latest migration check
 
-LesterSales.net has its own GitHub repository, Vercel project, and dedicated Supabase project. Local, Vercel Preview, and Vercel Production environments are configured with LesterSales.net-owned credentials. No outside product's code, database, storage, authentication, repository, or deployment resource is used by this application. The first standalone production deployment is live at `https://lester-sales-web.vercel.app`; custom-domain cutover is still pending.
+LesterSales.net has its own GitHub repository, Vercel project, and dedicated Supabase project. Local, Vercel Preview, and Vercel Production environments are configured with LesterSales.net-owned credentials. No outside product's code, database, storage, authentication, repository, or deployment resource is used by this application. The standalone production deployment is live at `https://lestersales.net`; `www.lestersales.net` is attached to the same Vercel project.
 
 ## Content migration path
 

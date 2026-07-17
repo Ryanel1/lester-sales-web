@@ -146,8 +146,8 @@ Completion condition: critical customer and publishing flows have automated cove
 - [ ] Back up the current Squarespace site and export its live-resource manifest.
 - [x] Define redirects for useful old brand URLs such as `/champion`, `/glb`, `/underarmour`, and `/pro`.
 - [ ] Remove Resort from the old live navigation during cutover.
-- [ ] Inventory current DNS records and preserve all email-related MX, SPF, DKIM, and DMARC records.
-- [ ] Point only the required web records for `lestersales.net` and `www.lestersales.net` to Vercel.
+- [x] Inventory current DNS records and preserve all Google Workspace, order-email MX/SPF/DKIM/DMARC, Domain Connect, and `saleslens.lestersales.net` records.
+- [x] Point only the required web records for `lestersales.net` and `www.lestersales.net` to the standalone `lester-sales-web` Vercel project.
 - [ ] Verify SSL, redirects, password access, every brand page, every file, the Account Application, mobile layouts, and email delivery.
 - [ ] Monitor errors and broken links closely after launch.
 
@@ -155,8 +155,8 @@ Completion condition: both apex and `www` serve the Vercel production deployment
 
 ## Immediate next milestone
 
-The standalone application and all customer content are complete. The remaining milestone is operational cutover:
+The standalone application, customer content, production deployment, and custom-domain DNS cutover are complete. The remaining milestone is post-cutover validation and monitoring:
 
-`DNS/email record inventory → domain connection → live password/resource verification → post-launch monitoring`
+`complete live resource/device review → verify company email delivery → post-launch monitoring`
 
-Do not change DNS until the current Squarespace records are exported and every MX, SPF, DKIM, and DMARC record has a preservation plan.
+The authoritative DNS configuration uses Vercel's preferred apex A records (`216.198.79.1` and `64.29.17.1`) and the project-specific `www` CNAME. The prior Squarespace website preset was removed without changing Google Workspace, order-email, Domain Connect, or SalesLens records.

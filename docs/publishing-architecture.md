@@ -58,6 +58,6 @@ This is intentionally a low-friction shared-password gate for deterring casual a
 4. Verified all 27 external company URLs with the automated checker.
 5. Removed customer-resource fixtures and duplicated local catalog PDFs.
 6. Deployed the standalone Vercel production site for device review.
-7. Custom-domain cutover remains the final operational step after DNS and email-record review.
+7. Cut over `lestersales.net` and `www.lestersales.net` to the standalone Vercel project while preserving Google Workspace, order-email, Domain Connect, and SalesLens DNS records.
 
 See `docs/live-content-inventory.md` for the verified published-page scope and file-selection rules.
