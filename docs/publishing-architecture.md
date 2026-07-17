@@ -11,7 +11,7 @@ The application owns a dedicated GitHub repository, Vercel project, Supabase pro
 
 The private publisher may live under an authenticated `/admin` route in this Next.js application or a separate deployment from the same LesterSales.net repository. In either case, it connects only to the dedicated LesterSales.net Supabase project.
 
-## Proposed tables
+## Implemented tables
 
 - `portal_brands`
 - `portal_catalogs`
@@ -44,20 +44,20 @@ Files or links already present in another product are not read across project bo
 
 ## Current portal access
 
-The fixture-backed portal now uses a shared customer password on the server and a signed, HTTP-only 12-hour session cookie. Pages and downloadable sales files are checked before delivery. Catalog cover images remain public so Next.js can optimize them; move those assets behind signed Supabase URLs when the storage migration is implemented.
+The Supabase-backed portal uses a shared customer password on the server and a signed, HTTP-only 12-hour session cookie. Pages and downloadable sales files are checked before delivery. Managed catalog covers and prebook hero images are delivered through protected, short-lived Supabase URLs.
 
 Production requires both `PORTAL_PASSWORD` and `PORTAL_SESSION_SECRET` and fails closed when either is missing. Rotate the session secret whenever all active customer sessions should be invalidated.
 
 This is intentionally a low-friction shared-password gate for deterring casual and competitor browsing. It is not customer identity, authorization, or a promise that externally hosted company links remain private after opening. Customer accounts, password recovery, per-user permissions, and access auditing are out of scope unless business requirements change.
 
-## Migration sequence
+## Completed migration sequence
 
-1. Inventory published Squarespace pages and build an allowlist of the sales files they currently reference; do not bulk-copy unused asset-library uploads.
-2. Enter the current Champion and Gear materials through the new publisher.
-3. Confirm the Supabase-backed portal matches the local fixture pages.
-4. Migrate Under Armour, Pro Sports, and remaining art/prebook resources.
-5. Verify the shared-password experience on customer devices.
-6. Deploy to a temporary Vercel URL for customer-device review.
-7. Connect the Squarespace-managed domain only after route, email-DNS, and file checks pass.
+1. Inventoried published Squarespace pages and built the 55-reference allowlist.
+2. Migrated the four current brands, seven catalogs, three art groups, and two archived prebooks.
+3. Retained stable company URLs and moved only Squarespace-hosted files to private Storage.
+4. Verified all 27 external company URLs with the automated checker.
+5. Removed customer-resource fixtures and duplicated local catalog PDFs.
+6. Deployed the standalone Vercel production site for device review.
+7. Custom-domain cutover remains the final operational step after DNS and email-record review.
 
 See `docs/live-content-inventory.md` for the verified published-page scope and file-selection rules.

@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "tsx --test src/lib/*.test.ts",
+    "check:links": "node --env-file=.env.local scripts/check-external-links.mjs",
+    "smoke:publishers": "node --env-file=.env.local scripts/smoke-publishers.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

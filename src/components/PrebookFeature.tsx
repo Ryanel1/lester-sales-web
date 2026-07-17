@@ -3,10 +3,11 @@ import { ResourceLink } from "@/components/ResourceLink";
 import type { PrebookEntry } from "@/data/portal";
 
 export function PrebookFeature({ prebook }: { prebook: PrebookEntry }) {
+  const deadline = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "America/Chicago" }).format(new Date(prebook.deadline));
   return (
     <article className="prebookFeature">
       <div className="prebookMedia">
-        <Image alt={prebook.imageAlt} fill sizes="(max-width: 760px) 100vw, 48vw" src={prebook.image} />
+        <Image alt={prebook.imageAlt} fill sizes="(max-width: 760px) 100vw, 48vw" src={prebook.image} unoptimized={prebook.image.startsWith("/api/media/") || prebook.image.startsWith("http")} />
       </div>
       <div className="prebookContent">
         <div className="prebookTitleRow">
@@ -19,7 +20,7 @@ export function PrebookFeature({ prebook }: { prebook: PrebookEntry }) {
           </span>
         </div>
         <dl className="prebookFacts">
-          <div><dt>Book by</dt><dd>{prebook.deadline}</dd></div>
+          <div><dt>Book by</dt><dd>{deadline}</dd></div>
           <div><dt>Expected ship</dt><dd>{prebook.shipDate}</dd></div>
           <div><dt>Minimums</dt><dd>{prebook.minimums}</dd></div>
         </dl>

@@ -3,6 +3,7 @@
 import { createClient, type Session } from "@supabase/supabase-js";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { PublisherNav } from "@/components/PublisherShared";
 import { isTemporarySignedUrl } from "@/lib/catalog-publisher";
 
 type BrandOption = { id: string; name: string; slug: string };
@@ -303,6 +304,7 @@ export function AdminCatalogPublisher() {
         <div><p className="publisherEyebrow">LesterSales.net · Private</p><h1>Catalog builder</h1><p>Create and maintain customer-ready catalogs with every supporting sales file attached.</p></div>
         <div className="publisherHeaderActions"><Link href="/brands/champion" target="_blank">Open customer site</Link><button onClick={() => client?.auth.signOut()} type="button">Sign out</button></div>
       </header>
+      <PublisherNav active="catalogs" />
       <div className="publisherGrid">
         <form className="publisherForm" id="catalog-editor" onSubmit={saveCatalog}>
           {editingId ? <div className="publisherEditNotice"><span>Editing</span><strong>{title}</strong><button onClick={resetForm} type="button">Cancel edit</button></div> : null}

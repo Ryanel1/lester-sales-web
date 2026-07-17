@@ -48,30 +48,7 @@ export type Brand = {
   artGroups: ArtGroup[];
 };
 
-const championArt: ArtGroup[] = [
-  {
-    title: "Decoration",
-    resources: [
-      { label: "Front chest screenprint", kind: "art" },
-      { label: "Front chest embroidery", kind: "art" },
-      { label: "Tackle twill", kind: "art" },
-      { label: "Tackle twill with mascot", kind: "art" },
-      { label: "Left chest embroidery", kind: "art" },
-      { label: "Oversized graphics", kind: "art" },
-    ],
-  },
-  {
-    title: "Sport & audience",
-    resources: [
-      { label: "Football", kind: "art" },
-      { label: "Baseball", kind: "art" },
-      { label: "Mom, dad & alumni", kind: "art" },
-      { label: "90s catalog flips", kind: "art" },
-      { label: "Reverse Weave", kind: "art" },
-    ],
-  },
-];
-
+// Brand metadata is the resilient navigation fallback. Published sales content lives only in Supabase.
 export const brands: Brand[] = [
   {
     slug: "champion",
@@ -80,31 +57,9 @@ export const brands: Brand[] = [
     shortDescription:
       "Current collegiate apparel, program pricing, art collections, and limited-time booking opportunities.",
     accent: "#c41230",
-    inlineCatalogs: [
-      {
-        id: "champion-collegiate-2026",
-        title: "Champion Collegiate 2026",
-        season: "Current inline collection",
-        image: "/catalogs/champion-collegiate-2026.jpg",
-        imageAlt: "Cover of the Champion Collegiate 2026 catalog",
-        summary:
-          "The current collegiate apparel assortment, kept together with the pricing and program files used to build an order.",
-        resources: [
-          {
-            label: "View catalog",
-            kind: "catalog",
-            sourceType: "storage_object",
-            href: "/documents/champion/champion-collegiate-2026.pdf",
-          },
-          { label: "Base pricing", kind: "pricing" },
-          { label: "High school pricing", kind: "pricing" },
-          { label: "Curated programs", kind: "program" },
-          { label: "Bookstore programs", kind: "program" },
-        ],
-      },
-    ],
+    inlineCatalogs: [],
     prebooks: [],
-    artGroups: championArt,
+    artGroups: [],
   },
   {
     slug: "gear-comfortwash",
@@ -113,44 +68,9 @@ export const brands: Brand[] = [
     shortDescription:
       "Collegiate and school apparel from Gear for Sports, plus garment-dyed ComfortWash collections and art programs.",
     accent: "#9d6b3f",
-    inlineCatalogs: [
-      {
-        id: "gear-collegiate-2026",
-        title: "Gear Collegiate 2026",
-        season: "Current inline collection",
-        image: "/catalogs/gear-collegiate-2026.jpg",
-        imageAlt: "Cover of the Gear for Sports Collegiate 2026 catalog",
-        summary:
-          "The current Gear for Sports collegiate collection with its supporting pricing and savings-program materials.",
-        resources: [
-          {
-            label: "View catalog",
-            kind: "catalog",
-            sourceType: "storage_object",
-            href: "/documents/gear/gear-collegiate-2026.pdf",
-          },
-          { label: "Standard pricing", kind: "pricing" },
-          { label: "High school pricing", kind: "pricing" },
-          { label: "Savings program", kind: "program" },
-        ],
-      },
-    ],
+    inlineCatalogs: [],
     prebooks: [],
-    artGroups: [
-      {
-        title: "Gear art collections",
-        resources: [
-          { label: "Floral embroidery", kind: "art" },
-          { label: "3-stripe front chest", kind: "art" },
-          { label: "Tapestry embroidery", kind: "art" },
-          { label: "Boucle", kind: "art" },
-          { label: "Metallic applique twill", kind: "art" },
-          { label: "Alumni art pack", kind: "art" },
-          { label: "Mom art pack", kind: "art" },
-          { label: "Dad art pack", kind: "art" },
-        ],
-      },
-    ],
+    artGroups: [],
   },
   {
     slug: "under-armour",

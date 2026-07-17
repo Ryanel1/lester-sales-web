@@ -17,6 +17,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
   const config = getPortalAuthConfig();
   const returnPath = safeReturnPath(params.next);
   const configurationError = params.reason === "configuration" || config.state === "misconfigured";
+  const accessError = params.error === "invalid" || params.error === "rate-limit";
 
   return (
     <main className="accessPage" id="main-content">
@@ -52,8 +53,8 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
               <input name="next" type="hidden" value={returnPath} />
               <label htmlFor="password">Customer password</label>
               <input
-                aria-describedby={params.error === "invalid" ? "access-error access-help" : "access-help"}
-                aria-invalid={params.error === "invalid" || undefined}
+                aria-describedby={accessError ? "access-error access-help" : "access-help"}
+                aria-invalid={accessError || undefined}
                 autoComplete="current-password"
                 autoFocus
                 id="password"
@@ -64,6 +65,9 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
               />
               {params.error === "invalid" && (
                 <p className="accessError" id="access-error" role="alert">That password wasn’t recognized. Try again.</p>
+              )}
+              {params.error === "rate-limit" && (
+                <p className="accessError" id="access-error" role="alert">Too many attempts. Wait ten minutes, then try again.</p>
               )}
               <button type="submit">
                 Continue to library <ArrowRightIcon className="accessButtonIcon" />

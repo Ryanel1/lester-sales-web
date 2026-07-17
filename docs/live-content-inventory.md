@@ -106,12 +106,17 @@ Twelve currently published art links use expired signed CloudFront URLs: one Cha
 
 The corresponding canonical Azure Blob path pattern responded successfully in a representative check. Every affected file still needs an individual availability and content check before download. If a canonical source fails, request the current file from the publisher rather than selecting an unreferenced Squarespace asset.
 
-## Next migration pass
+## Migration result
 
-1. Export the exact published link URL for all 55 references.
-2. Resolve redirects and replace expired signed URLs with verified canonical sources.
-3. Download into a staging directory outside `public/`.
-4. Verify PDF type, non-zero page count, filename, byte size, and SHA-256 checksum.
-5. Compare duplicates by checksum.
-6. Import verified current resources into the fixture model, marking passed prebooks archived.
-7. Move the same manifest into Supabase records and private storage when the publisher is ready.
+Completed July 16, 2026:
+
+1. Captured the exact published link URL for all 55 references.
+2. Replaced twelve expired signed CloudFront URLs with individually checked canonical company URLs.
+3. Retained 27 verified company-hosted URLs without duplicating their files.
+4. Copied 28 Squarespace-hosted resources into private LesterSales.net Storage with original filename, MIME type, byte size, source URL, and SHA-256.
+5. Published seven current catalogs and three art groups across the four brands.
+6. Stored both passed Champion prebooks as archived records; neither appears in Open Prebooks.
+7. Generated and privately stored current catalog-cover images for every migrated catalog.
+8. Removed the 74 MB of duplicated local catalog PDFs after customer delivery was verified against the migrated records.
+
+The reproducible allowlist and import procedure live in `scripts/migrate-live-content.mjs`. `npm run check:links` rechecks all external URLs and updates their database status.
