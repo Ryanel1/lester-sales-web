@@ -11,6 +11,7 @@ The physical scene is a buyer opening the site on a laptop during a meeting and 
 - Type: Public Sans only; hierarchy comes from weight, spacing, and scale.
 - Catalog composition: merchandise cover beside concise context and two compact document columns—Catalogs & Programs, then Pricing.
 - Prebooks: use the same surface vocabulary with clear status and deadline treatment rather than a separate visual theme.
+- Section rhythm: the soft neutral color block belongs to the middle page band, currently Art Library, rather than following a content category when sections are reordered.
 - Art library: compact, equal-width document rows arranged in a restrained responsive grid and grouped by subject; no decorative card grid.
 - Corners: 9-11px on content surfaces; pills only for status.
 - Motion: 160-220ms state transitions only, with a reduced-motion alternative.

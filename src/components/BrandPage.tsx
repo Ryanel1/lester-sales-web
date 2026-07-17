@@ -75,7 +75,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
         </section>
 
         <section className="portalSection prebookSection" id="prebooks">
-          <div className="sectionHeading sectionHeadingDark">
+          <div className="sectionHeading">
             <div>
               <h2>Open prebooks</h2>
               <p>Limited-time programs with booking dates, ship timing, minimums, and order files.</p>
@@ -87,10 +87,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
               {brand.prebooks.map((prebook) => <PrebookFeature key={prebook.id} prebook={prebook} />)}
             </div>
           ) : (
-            <div className="emptySection emptySectionDark">
-              <span aria-hidden="true" />
-              <p>No prebooks are open right now. New programs will appear here when they are published.</p>
-            </div>
+            <EmptySection>No prebooks are open right now. New programs will appear here when they are published.</EmptySection>
           )}
         </section>
       </main>

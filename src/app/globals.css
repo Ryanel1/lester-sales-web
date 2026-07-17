@@ -368,7 +368,7 @@ button, input, select, textarea { font: inherit; }
 
 .portalSection { scroll-margin-top: 112px; padding: clamp(50px, 6vw, 82px) var(--page-gutter); }
 .inlineSection, .artSection, .prebookSection { background: var(--surface); color: var(--text); }
-.prebookSection { background: var(--workspace-subtle); border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); }
+.artSection { background: var(--workspace-subtle); border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); }
 .sectionHeading {
   align-items: end;
   border-bottom: 1px solid var(--line);
@@ -379,8 +379,6 @@ button, input, select, textarea { font: inherit; }
 }
 .sectionHeading p { margin-top: 10px; }
 .sectionHeading > span { color: var(--text-faint); font-size: 0.6875rem; font-weight: 700; }
-.sectionHeadingDark { border-color: var(--line); }
-.sectionHeadingDark p, .sectionHeadingDark > span { color: var(--text-soft); }
 .catalogStack, .prebookStack { margin: 0 auto; max-width: var(--content-width); }
 .catalogFeature {
   align-items: center;
@@ -448,14 +446,9 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
 .prebookFacts dt { color: var(--text-faint); font-size: 0.6875rem; font-weight: 600; margin-bottom: 5px; }
 .prebookFacts dd { font-size: 0.8125rem; font-weight: 700; margin: 0; }
 .prebookDetails { color: var(--text-soft); font-size: 0.875rem; line-height: 1.55; margin: 0 0 24px; padding-left: 18px; }
-.resourceListDark .resourceLink { background: var(--surface); border-color: var(--line); color: var(--text); }
-.resourceListDark a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; }
-
 .emptySection { align-items: center; display: flex; gap: 14px; min-height: 150px; }
 .emptySection span { background: var(--brand-accent, var(--text)); border-radius: 3px; height: 9px; width: 9px; }
 .emptySection p { color: var(--text-soft); font-size: 0.875rem; line-height: 1.55; margin: 0; max-width: 56ch; }
-.emptySectionDark span { background: var(--text-faint); }
-.emptySectionDark p { color: var(--text-soft); }
 .artGroups { display: grid; gap: 32px; padding-top: 30px; }
 .artGroup { display: grid; gap: 14px; }
 .artGroup h3 { border-bottom: 1px solid var(--line); font-size: 0.875rem; margin: 0; padding-bottom: 12px; }

@@ -27,7 +27,7 @@ export function PrebookFeature({ prebook }: { prebook: PrebookEntry }) {
         <ul className="prebookDetails">
           {prebook.details.map((detail) => <li key={detail}>{detail}</li>)}
         </ul>
-        <div className="resourceList resourceListDark">
+        <div className="resourceList">
           {prebook.resources.map((resource) => <ResourceLink key={resource.label} resource={resource} />)}
         </div>
       </div>
