@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   async redirects() {
     return [
+      {
+        source: "/",
+        has: [{ type: "host", value: "admin.lestersales.net" }],
+        destination: "https://lestersales.net/admin",
+        permanent: true,
+      },
       { source: "/champion", destination: "/brands/champion", permanent: true },
       { source: "/glb", destination: "/brands/gear-comfortwash", permanent: true },
       { source: "/underarmour", destination: "/brands/under-armour", permanent: true },
