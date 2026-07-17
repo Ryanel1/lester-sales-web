@@ -35,7 +35,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
           <div className="sectionHeading">
             <div>
               <h2>Inline catalogs</h2>
-              <p>Current in-stock collections and the files that support each assortment.</p>
+              <p>Current in-stock collections with the catalogs, pricing, and programs you need in one place.</p>
             </div>
           </div>
           {brand.inlineCatalogs.length ? (
@@ -45,7 +45,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
               ))}
             </div>
           ) : (
-            <EmptySection>No current inline catalogs are published for this brand.</EmptySection>
+            <EmptySection>No catalogs are available here right now. New materials will appear as soon as they are ready.</EmptySection>
           )}
         </section>
 
@@ -53,7 +53,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
           <div className="sectionHeading">
             <div>
               <h2>Art library</h2>
-              <p>Reusable design collections organized around the way customers build assortments.</p>
+              <p>Reusable design collections organized to help you build assortments more easily.</p>
             </div>
           </div>
           {brand.artGroups.length ? (
@@ -70,7 +70,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
               ))}
             </div>
           ) : (
-            <EmptySection>No art collections are published for this brand.</EmptySection>
+            <EmptySection>No art collections are available here right now. New collections will appear as soon as they are ready.</EmptySection>
           )}
         </section>
 
@@ -78,7 +78,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
           <div className="sectionHeading">
             <div>
               <h2>Open prebooks</h2>
-              <p>Limited-time programs with booking dates, ship timing, minimums, and order files.</p>
+              <p>Limited-time programs with booking dates, ship timing, minimums, and order files together in one place.</p>
             </div>
             <span>{brand.prebooks.length} open</span>
           </div>
@@ -87,7 +87,7 @@ export function BrandPage({ brand }: { brand: Brand }) {
               {brand.prebooks.map((prebook) => <PrebookFeature key={prebook.id} prebook={prebook} />)}
             </div>
           ) : (
-            <EmptySection>No prebooks are open right now. New programs will appear here when they are published.</EmptySection>
+            <EmptySection>No prebooks are open right now. When a new program opens, you’ll find it here.</EmptySection>
           )}
         </section>
       </main>

@@ -11,7 +11,7 @@ const publicSans = Public_Sans({
 
 export const metadata: Metadata = {
   title: { default: "Lester Sales", template: "%s | Lester Sales" },
-  description: "Customer catalogs, pricing, prebooks, and art resources from Lester Sales.",
+  description: "Current catalogs, pricing, prebooks, and art resources organized to support your work.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

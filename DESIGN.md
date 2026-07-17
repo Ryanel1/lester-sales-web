@@ -4,6 +4,13 @@ The customer portal is a standalone LesterSales.net product. Its visual language
 
 The physical scene is a buyer opening the site on a laptop during a meeting and needing the correct catalog or price sheet in under thirty seconds. Large merchandise imagery creates recognition; the surrounding interface stays restrained.
 
+## Voice
+
+- Speak directly to buyers as respected partners whose time and success matter.
+- Emphasize making their work easier, helping them find what they need, and supporting them throughout the process.
+- Never frame customers as a means to a sale or call the public resources “sales tools.”
+- Use necessary business terms such as pricing, orders, booking dates, and minimums plainly without making the relationship feel transactional.
+
 ## Visual rules
 
 - Header: white, sticky, concise horizontal brand navigation, and a restrained active state.

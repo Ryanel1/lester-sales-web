@@ -5,7 +5,7 @@ export function SiteFooter({ variant = "default" }: { variant?: "default" | "por
     <footer className={`siteFooter${variant === "portfolio" ? " siteFooterPortfolio" : ""}`}>
       <div>
         <Link className="footerWordmark" href="/">Lester Sales</Link>
-        <p>Current catalogs, programs, pricing, and art resources for Lester Sales customers.</p>
+        <p>Current catalogs, programs, pricing, and art resources—organized to support your work.</p>
       </div>
       <div className="footerLinks">
         <a
@@ -19,7 +19,7 @@ export function SiteFooter({ variant = "default" }: { variant?: "default" | "por
         <form action="/api/logout" method="post">
           <button type="submit">Sign out</button>
         </form>
-        <span>Customer resources</span>
+        <span>Here to help you succeed</span>
       </div>
     </footer>
   );

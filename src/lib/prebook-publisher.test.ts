@@ -4,7 +4,7 @@ import { prebookRecord, prebookResourceRows } from "./prebook-publisher";
 
 const brandId = "11111111-1111-1111-1111-111111111111";
 
-test("prebook publishing requires dates, selling facts, and the three core files", () => {
+test("prebook publishing requires dates, booking details, and the three core files", () => {
   const rows = prebookResourceRows([
     { label: "Catalog", kind: "catalog", sourceType: "external_url", externalUrl: "https://company.example/catalog.pdf" },
     { label: "Price list", kind: "pricing", sourceType: "external_url", externalUrl: "https://company.example/pricing.pdf" },

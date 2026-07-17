@@ -10,7 +10,11 @@ LesterSales.net is a password-protected customer resource portal for current inl
 
 The shared password is a lightweight deterrent against casual and competitor browsing. Customers may share it; the portal does not need customer accounts, individual permissions, or high-security access controls.
 
-Customers normally arrive with a brand or selling opportunity already in mind. The portal helps them find the correct current material quickly during or after a sales conversation.
+Customers normally arrive with a brand, program, or project already in mind. The portal helps buyers find the correct current materials quickly, work more confidently, and make each step of the process easier.
+
+## Customer promise
+
+Lester Sales values buyers as long-term partners and genuinely wants them to be more successful in their work. The site speaks directly to customers with warmth and respect, prioritizes their time, and makes complicated ordering processes easier. Copy must never frame a customer as a path to a sale or describe resources primarily as tools for closing business. Prefer language such as “support you,” “support your work,” and “help you find what you need.”
 
 ## Information architecture
 
@@ -31,10 +35,11 @@ The portal owns its interface system outright within this repository. It does no
 
 ## Principles
 
-1. Brand first.
-2. Current materials before historical materials.
-3. Catalog art carries the visual personality.
-4. Supporting documents remain attached to their catalog or program.
-5. Familiar page structure beats feature density.
-6. Empty, closed, and unavailable states are explicit.
-7. Reliable company-hosted files remain links instead of being duplicated solely for hosting.
+1. Customer success before transaction.
+2. Brand first.
+3. Current materials before historical materials.
+4. Catalog art carries the visual personality.
+5. Supporting documents remain attached to their catalog or program.
+6. Familiar page structure beats feature density.
+7. Empty, closed, and unavailable states are explicit and helpful.
+8. Reliable company-hosted files remain links instead of being duplicated solely for hosting.

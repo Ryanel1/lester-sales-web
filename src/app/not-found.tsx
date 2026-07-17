@@ -7,8 +7,8 @@ export default function NotFound() {
       <SiteHeader />
       <main className="notFound" id="main-content">
         <p>Resource not found</p>
-        <h1>That page is not in the customer library.</h1>
-        <Link href="/">Return to all brands</Link>
+        <h1>That page isn’t available in the resource library.</h1>
+        <Link href="/">Return to the brand portfolio</Link>
       </main>
     </>
   );

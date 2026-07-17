@@ -57,10 +57,10 @@ export default function HomePage() {
             <h1>Our brand portfolio.</h1>
             <div className="portfolioHeroIntroduction">
               <p>
-                Champion, Under Armour, Gear for Sports, and ComfortWash—represented with the
-                catalogs, pricing, art, and programs that support the sale.
+                Champion, Under Armour, Gear for Sports, and ComfortWash—along with the catalogs,
+                pricing, art, and programs that support you.
               </p>
-              <span>Select a brand to open its current customer resources.</span>
+              <span>Choose a brand to find what you need.</span>
             </div>
           </div>
         </section>
@@ -105,7 +105,7 @@ export default function HomePage() {
               <h2>Pro Sports</h2>
             </div>
             <p>
-              Find current professional-team catalogs and programs in one destination, regardless
+              Find the professional-team catalogs and programs you need in one place, regardless
               of the brand producing the assortment.
             </p>
             <Link href="/brands/pro-sports">

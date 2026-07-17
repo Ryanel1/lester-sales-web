@@ -23,7 +23,7 @@ Portal protection is bypassed in local development when no auth variables are se
 - Explicit unpublished-file and empty-section states
 - Responsive desktop and mobile layouts
 - Supabase-backed customer data with brand-only navigation fallback metadata
-- Password-protected pages and downloadable sales files with a signed 12-hour session
+- Password-protected pages and downloadable resource files with a signed 12-hour session
 - Dedicated customer access screen and safe return-to-resource redirects
 - Dedicated LesterSales.net Supabase project with seven portal tables and private Storage
 - Private Catalog, Prebook, Art Library, and Link Health tools with separate Supabase administrator authentication

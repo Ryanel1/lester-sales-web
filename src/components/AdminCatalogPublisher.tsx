@@ -301,7 +301,7 @@ export function AdminCatalogPublisher() {
   return (
     <main className="publisherShell">
       <header className="publisherHeader">
-        <div><p className="publisherEyebrow">LesterSales.net · Private</p><h1>Catalog builder</h1><p>Create and maintain customer-ready catalogs with every supporting sales file attached.</p></div>
+        <div><p className="publisherEyebrow">LesterSales.net · Private</p><h1>Catalog builder</h1><p>Create and maintain customer-ready catalogs with every supporting resource attached.</p></div>
         <div className="publisherHeaderActions"><Link href="/brands/champion" target="_blank">Open customer site</Link><button onClick={() => client?.auth.signOut()} type="button">Sign out</button></div>
       </header>
       <PublisherNav active="catalogs" />

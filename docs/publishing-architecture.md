@@ -36,7 +36,7 @@ Prebooks additionally derive `open`, `closing-soon`, and `closed` from the booki
 
 ## Storage
 
-Use private Supabase Storage buckets for covers and sales files that Lester Sales must host. Customer routes issue short-lived signed URLs after portal access has been verified. The service-role key never reaches the browser.
+Use private Supabase Storage buckets for covers and resource files that Lester Sales must host. Customer routes issue short-lived signed URLs after portal access has been verified. The service-role key never reaches the browser.
 
 Reliable company-hosted resources do not need to be duplicated. Supabase stores their external URLs as record data and the customer portal opens those URLs directly. Vercel hosts the application build and environment configuration; it is not used as persistent document storage.
 
@@ -44,7 +44,7 @@ Files or links already present in another product are not read across project bo
 
 ## Current portal access
 
-The Supabase-backed portal uses a shared customer password on the server and a signed, HTTP-only 12-hour session cookie. Pages and downloadable sales files are checked before delivery. Managed catalog covers and prebook hero images are delivered through protected, short-lived Supabase URLs.
+The Supabase-backed portal uses a shared customer password on the server and a signed, HTTP-only 12-hour session cookie. Pages and downloadable resource files are checked before delivery. Managed catalog covers and prebook hero images are delivered through protected, short-lived Supabase URLs.
 
 Production requires both `PORTAL_PASSWORD` and `PORTAL_SESSION_SECRET` and fails closed when either is missing. Rotate the session secret whenever all active customer sessions should be invalidated.
 

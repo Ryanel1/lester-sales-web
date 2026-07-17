@@ -4,7 +4,7 @@ import { ArrowRightIcon } from "@/components/Icons";
 import { getPortalAuthConfig, safeReturnPath } from "@/lib/portal-auth";
 
 export const metadata: Metadata = {
-  title: "Customer access",
+  title: "Resource library access",
   robots: { follow: false, index: false },
 };
 
@@ -26,8 +26,8 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
           <span>Lester</span> Sales
         </Link>
         <div className="accessIntroductionCopy">
-          <h1 id="access-title">Current sales tools, kept in one place.</h1>
-          <p>Catalogs, pricing, open prebooks, and art resources for Lester Sales customers.</p>
+          <h1 id="access-title">Everything you need, kept in one place.</h1>
+          <p>Catalogs, pricing, open prebooks, and art resources organized to make your work easier.</p>
         </div>
         <p className="accessFootnote">Private access · LesterSales.net</p>
       </section>
@@ -35,7 +35,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
       <section className="accessPanel" aria-labelledby="sign-in-title">
         <div className="accessFormWrap">
           <p className="accessEyebrow">Welcome back</p>
-          <h2 id="sign-in-title">Enter the customer library</h2>
+          <h2 id="sign-in-title">Open your resource library</h2>
 
           {configurationError ? (
             <div className="accessNotice accessNoticeError" role="alert">
@@ -69,7 +69,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
                 <p className="accessError" id="access-error" role="alert">Too many attempts. Wait ten minutes, then try again.</p>
               )}
               <button type="submit">
-                Continue to library <ArrowRightIcon className="accessButtonIcon" />
+                Open resource library <ArrowRightIcon className="accessButtonIcon" />
               </button>
               <p className="accessHelp" id="access-help">
                 Need the current password? <a href="mailto:info@lestersales.net">Contact Lester Sales</a>.
@@ -79,7 +79,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
 
           {config.state === "disabled" && !configurationError && (
             <Link className="accessContinue" href={returnPath}>
-              Continue to library <ArrowRightIcon className="accessButtonIcon" />
+              Open resource library <ArrowRightIcon className="accessButtonIcon" />
             </Link>
           )}
         </div>
