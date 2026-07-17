@@ -27,8 +27,8 @@ export function BrandPage({ brand }: { brand: Brand }) {
           </div>
           <nav aria-label={`${brand.name} page sections`} className="sectionNav">
             <a href="#inline">Inline catalogs</a>
-            <a href="#prebooks">Open prebooks</a>
             <a href="#art-library">Art library</a>
+            <a href="#prebooks">Open prebooks</a>
           </nav>
         </section>
 
@@ -48,26 +48,6 @@ export function BrandPage({ brand }: { brand: Brand }) {
             </div>
           ) : (
             <EmptySection>No current inline catalogs are published for this brand.</EmptySection>
-          )}
-        </section>
-
-        <section className="portalSection prebookSection" id="prebooks">
-          <div className="sectionHeading sectionHeadingDark">
-            <div>
-              <h2>Open prebooks</h2>
-              <p>Limited-time programs with booking dates, ship timing, minimums, and order files.</p>
-            </div>
-            <span>{brand.prebooks.length} open</span>
-          </div>
-          {brand.prebooks.length ? (
-            <div className="prebookStack">
-              {brand.prebooks.map((prebook) => <PrebookFeature key={prebook.id} prebook={prebook} />)}
-            </div>
-          ) : (
-            <div className="emptySection emptySectionDark">
-              <span aria-hidden="true" />
-              <p>No prebooks are open right now. New programs will appear here when they are published.</p>
-            </div>
           )}
         </section>
 
@@ -94,6 +74,26 @@ export function BrandPage({ brand }: { brand: Brand }) {
             </div>
           ) : (
             <EmptySection>No art collections are published for this brand.</EmptySection>
+          )}
+        </section>
+
+        <section className="portalSection prebookSection" id="prebooks">
+          <div className="sectionHeading sectionHeadingDark">
+            <div>
+              <h2>Open prebooks</h2>
+              <p>Limited-time programs with booking dates, ship timing, minimums, and order files.</p>
+            </div>
+            <span>{brand.prebooks.length} open</span>
+          </div>
+          {brand.prebooks.length ? (
+            <div className="prebookStack">
+              {brand.prebooks.map((prebook) => <PrebookFeature key={prebook.id} prebook={prebook} />)}
+            </div>
+          ) : (
+            <div className="emptySection emptySectionDark">
+              <span aria-hidden="true" />
+              <p>No prebooks are open right now. New programs will appear here when they are published.</p>
+            </div>
           )}
         </section>
       </main>
