@@ -223,19 +223,44 @@ button, input, select, textarea { font: inherit; }
   right: 0;
 }
 
-/* Landing page */
+/* Logo-led brand portfolio landing page. */
 
-.homeHero {
+.portfolioHero {
+  background: var(--workspace);
+  border-bottom: 1px solid var(--line);
+}
+.portfolioHeroInner {
+  align-items: end;
   display: grid;
-  gap: clamp(32px, 5.25vw, 72px);
-  grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+  gap: clamp(40px, 7vw, 104px);
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
   margin: 0 auto;
   max-width: calc(var(--content-width) + (var(--page-gutter) * 2));
-  min-height: min(690px, calc(100dvh - 68px));
-  overflow: hidden;
-  padding: clamp(52px, 6vw, 88px) var(--page-gutter) clamp(52px, 6vw, 82px);
+  padding: clamp(68px, 8vw, 116px) var(--page-gutter) clamp(58px, 7vw, 94px);
 }
-.homeHeroCopy { align-self: center; max-width: 650px; }
+.portfolioHero h1 {
+  font-size: clamp(3.6rem, 7vw, 5.5rem);
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  line-height: 0.94;
+  margin: 0;
+  max-width: 8ch;
+  text-wrap: balance;
+}
+.portfolioHeroIntroduction { max-width: 560px; padding-bottom: 4px; }
+.portfolioHeroIntroduction p {
+  color: var(--text);
+  font-size: clamp(1rem, 1.35vw, 1.125rem);
+  line-height: 1.65;
+  margin: 0 0 22px;
+  text-wrap: pretty;
+}
+.portfolioHeroIntroduction span {
+  color: var(--text-soft);
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
 .catalogSeason {
   color: var(--text-faint);
   font-size: 0.6875rem;
@@ -244,83 +269,138 @@ button, input, select, textarea { font: inherit; }
   margin: 0 0 16px;
   text-transform: uppercase;
 }
-.homeHero h1 {
-  font-size: clamp(2.75rem, 4.6vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 0.98;
-  margin: 0;
-  max-width: 11ch;
-  text-wrap: balance;
+
+.portfolioShowcase {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: clamp(28px, 3.5vw, 48px) var(--page-gutter) clamp(66px, 8vw, 112px);
 }
-.homeHeroCopy > p {
-  color: var(--text-soft);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  margin: 24px 0 26px;
-  max-width: 52ch;
+.portfolioGrid {
+  display: grid;
+  gap: clamp(12px, 1.5vw, 18px);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  margin: 0 auto;
+  max-width: var(--content-width);
 }
-.heroAction {
+.portfolioBrand {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  display: grid;
+  grid-template-rows: minmax(250px, 1fr) auto;
+  min-width: 0;
+  overflow: hidden;
+  text-decoration: none;
+}
+.portfolioBrandChampion { background: #f5f6f9; grid-column: span 7; min-height: 440px; }
+.portfolioBrandUnderArmour { background: #eef1f2; grid-column: span 5; min-height: 440px; }
+.portfolioBrandGear { background: #ffffff; grid-column: span 5; min-height: 380px; }
+.portfolioBrandComfortWash { background: #efede9; grid-column: span 7; min-height: 380px; }
+.portfolioBrandMark {
   align-items: center;
-  background: var(--control);
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  padding: clamp(38px, 6vw, 78px);
+}
+.portfolioBrandMark img {
+  height: auto;
+  object-fit: contain;
+  transition: transform 260ms var(--ease-out);
+}
+.portfolioBrandChampion .portfolioBrandMark img { width: min(78%, 460px); }
+.portfolioBrandUnderArmour .portfolioBrandMark img { width: min(52%, 190px); }
+.portfolioBrandGear .portfolioBrandMark img { width: min(62%, 220px); }
+.portfolioBrandComfortWash .portfolioBrandMark img { width: min(58%, 230px); }
+.portfolioBrandDetails {
+  align-items: end;
+  background: rgba(255, 255, 255, 0.76);
+  border-top: 1px solid rgba(32, 43, 52, 0.1);
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  padding: 22px 24px 24px;
+}
+.portfolioBrandDetails h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0 0 8px;
+}
+.portfolioBrandDetails p {
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 38ch;
+}
+.portfolioBrandArrow {
+  align-items: center;
+  border: 1px solid rgba(32, 43, 52, 0.2);
+  border-radius: 50%;
+  display: flex;
+  flex: 0 0 auto;
+  height: 40px;
+  justify-content: center;
+  transition: background-color var(--motion-fast) ease, color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
+  width: 40px;
+}
+.portfolioBrandArrow svg { height: 17px; width: 17px; }
+.portfolioBrand:hover .portfolioBrandMark img { transform: scale(1.025); }
+.portfolioBrand:hover .portfolioBrandArrow { background: var(--text); color: white; transform: translateX(2px); }
+
+.proSportsPortfolio {
+  background: var(--workspace-subtle);
+  border-bottom: 1px solid var(--line);
+  padding: clamp(56px, 6.5vw, 88px) var(--page-gutter);
+}
+.proSportsPortfolioInner {
+  align-items: end;
+  display: grid;
+  gap: clamp(28px, 5vw, 72px);
+  grid-template-columns: minmax(250px, 0.8fr) minmax(320px, 1.2fr) auto;
+  margin: 0 auto;
+  max-width: var(--content-width);
+}
+.proSportsPortfolioInner > div > p {
+  color: var(--text-soft);
+  font-size: 0.75rem;
+  font-weight: 650;
+  margin: 0 0 11px;
+}
+.proSportsPortfolio h2 {
+  font-size: clamp(2.4rem, 4vw, 3.5rem);
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  margin: 0;
+}
+.proSportsPortfolioInner > p {
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 56ch;
+  text-wrap: pretty;
+}
+.proSportsPortfolio a {
+  align-items: center;
+  border: 1px solid #bdc8ce;
   border-radius: var(--radius);
-  color: white;
   display: inline-flex;
   font-size: 0.75rem;
   font-weight: 700;
   gap: 18px;
-  min-height: 44px;
+  min-height: 46px;
   padding: 0 15px;
   text-decoration: none;
-  transition: background-color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
+  transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  white-space: nowrap;
 }
-.heroAction:hover { background: var(--control-hover); transform: translateY(-1px); }
-.heroActionIcon { height: 17px; width: 17px; }
-.heroCovers { align-self: center; min-height: 480px; position: relative; }
-.heroCover {
-  background: var(--surface-muted);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  position: absolute;
-}
-.heroCover img { object-fit: cover; }
-.heroCoverChampion { aspect-ratio: 612 / 792; right: clamp(120px, 12vw, 186px); top: 0; width: min(52%, 320px); z-index: 2; }
-.heroCoverGear { aspect-ratio: 612 / 792; bottom: 0; right: 0; width: min(43%, 260px); z-index: 1; }
+.proSportsPortfolio a:hover { background: var(--surface); border-color: #9eabb3; }
+.proSportsPortfolio a svg { height: 17px; width: 17px; }
 
-.brandDirectory {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  border-top: 1px solid var(--line);
-  padding: clamp(52px, 6vw, 82px) var(--page-gutter);
-}
-.directoryIntro, .brandRows { margin: 0 auto; max-width: var(--content-width); }
-.directoryIntro { display: grid; gap: 24px; grid-template-columns: 0.85fr 1.15fr; margin-bottom: 32px; }
-.directoryIntro h2, .sectionHeading h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1;
-  margin: 0;
-  text-wrap: balance;
-}
-.directoryIntro p, .sectionHeading p { color: var(--text-soft); font-size: 0.875rem; line-height: 1.6; margin: 0; max-width: 58ch; }
-.brandRows { border-top: 1px solid var(--line); }
-.brandRow {
-  align-items: center;
-  border-bottom: 1px solid var(--line);
-  display: grid;
-  gap: 20px;
-  grid-template-columns: 40px minmax(230px, 0.8fr) 1fr 22px;
-  min-height: 88px;
-  text-decoration: none;
-  transition: background-color var(--motion-fast) ease;
-}
-.brandRow:hover { background: var(--surface-muted); }
-.brandRowIndex { color: var(--text-faint); font-size: 0.6875rem; font-variant-numeric: tabular-nums; }
-.brandRowName { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
-.brandRowStatus { color: var(--text-soft); font-size: 0.8125rem; }
-.brandRowArrow { height: 18px; width: 18px; }
-.homeNote {
+.homeContact {
   align-items: center;
   display: flex;
   justify-content: space-between;
@@ -328,8 +408,22 @@ button, input, select, textarea { font: inherit; }
   max-width: calc(var(--content-width) + (var(--page-gutter) * 2));
   padding: 40px var(--page-gutter);
 }
-.homeNote p { font-size: 0.9375rem; font-weight: 700; margin: 0; }
-.homeNote a { color: var(--text-soft); font-size: 0.75rem; font-weight: 700; text-underline-offset: 4px; }
+.homeContact p { font-size: 0.9375rem; font-weight: 700; margin: 0; }
+.homeContact a { color: var(--text-soft); font-size: 0.75rem; font-weight: 700; text-underline-offset: 4px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .portfolioHero h1, .portfolioHeroIntroduction, .portfolioBrand { animation: portfolioEnter 560ms var(--ease-out) both; }
+  .portfolioHeroIntroduction { animation-delay: 70ms; }
+  .portfolioBrand:nth-child(1) { animation-delay: 100ms; }
+  .portfolioBrand:nth-child(2) { animation-delay: 150ms; }
+  .portfolioBrand:nth-child(3) { animation-delay: 200ms; }
+  .portfolioBrand:nth-child(4) { animation-delay: 250ms; }
+}
+
+@keyframes portfolioEnter {
+  from { opacity: 0.01; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* Brand pages */
 
@@ -377,7 +471,15 @@ button, input, select, textarea { font: inherit; }
   grid-template-columns: 1fr auto;
   padding-bottom: 18px;
 }
-.sectionHeading p { margin-top: 10px; }
+.sectionHeading h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+  text-wrap: balance;
+}
+.sectionHeading p { color: var(--text-soft); font-size: 0.875rem; line-height: 1.6; margin: 10px 0 0; max-width: 58ch; }
 .sectionHeading > span { color: var(--text-faint); font-size: 0.6875rem; font-weight: 700; }
 .catalogStack, .prebookStack { margin: 0 auto; max-width: var(--content-width); }
 .catalogFeature {
@@ -523,11 +625,11 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
 @media (max-width: 900px) {
   .siteHeaderInner { align-items: flex-start; flex-direction: column; gap: 0; height: auto; padding-top: 16px; }
   .brandNav { margin: 10px 0 0; max-width: 100%; min-height: 46px; width: 100%; }
-  .homeHero { grid-template-columns: 1fr; min-height: auto; }
-  .homeHeroCopy { max-width: 760px; }
-  .heroCovers { min-height: min(98vw, 590px); }
-  .heroCoverChampion { left: 8%; right: auto; width: 46%; }
-  .heroCoverGear { right: 8%; width: 39%; }
+  .portfolioHeroInner { align-items: start; gap: 28px; grid-template-columns: 1fr; }
+  .portfolioHero h1 { max-width: 10ch; }
+  .portfolioHeroIntroduction { max-width: 620px; padding-bottom: 0; }
+  .proSportsPortfolioInner { align-items: start; grid-template-columns: 1fr; }
+  .proSportsPortfolio a { justify-self: start; }
   .catalogFeature, .prebookFeature { gap: 32px; grid-template-columns: minmax(250px, 0.85fr) minmax(300px, 1.15fr); }
   .artLinks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .accessPage { grid-template-columns: 1fr; }
@@ -537,11 +639,10 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
 }
 
 @media (max-width: 700px) {
-  .directoryIntro, .sectionHeading, .catalogFeature, .prebookFeature, .resourceColumns { grid-template-columns: 1fr; }
-  .brandRow { gap: 10px; grid-template-columns: 32px 1fr 20px; min-height: 80px; }
-  .brandRowStatus { display: none; }
-  .brandRowArrow { grid-column: 3; }
-  .homeNote, .siteFooter { align-items: flex-start; flex-direction: column; }
+  .portfolioGrid { grid-template-columns: 1fr; }
+  .portfolioBrand, .portfolioBrandChampion, .portfolioBrandUnderArmour, .portfolioBrandGear, .portfolioBrandComfortWash { grid-column: auto; min-height: 360px; }
+  .homeContact, .siteFooter { align-items: flex-start; flex-direction: column; }
+  .sectionHeading, .catalogFeature, .prebookFeature, .resourceColumns { grid-template-columns: 1fr; }
   .catalogCoverWell { justify-self: center; max-width: min(78vw, 360px); }
   .catalogContent { max-width: none; }
   .prebookFacts { grid-template-columns: 1fr; }
@@ -553,11 +654,13 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
 }
 
 @media (max-width: 480px) {
-  .homeHero { padding-top: 50px; }
-  .homeHero h1 { font-size: 2.55rem; }
-  .heroCovers { min-height: 112vw; }
-  .heroCoverChampion { left: 0; width: 56%; }
-  .heroCoverGear { right: 0; width: 46%; }
+  .portfolioHeroInner { padding-bottom: 52px; padding-top: 54px; }
+  .portfolioHero h1 { font-size: 3rem; }
+  .portfolioShowcase { padding-bottom: 66px; }
+  .portfolioBrand, .portfolioBrandChampion, .portfolioBrandUnderArmour, .portfolioBrandGear, .portfolioBrandComfortWash { grid-template-rows: minmax(210px, 1fr) auto; min-height: 330px; }
+  .portfolioBrandMark { padding: 36px 28px; }
+  .portfolioBrandDetails { padding: 20px; }
+  .proSportsPortfolio { padding-bottom: 60px; padding-top: 60px; }
   .resourceList { flex-direction: column; }
   .resourceLink { justify-content: flex-start; width: 100%; }
   .resourceArrow, .resourceState { margin-left: auto; }

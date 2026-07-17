@@ -7,6 +7,7 @@ The physical scene is a buyer opening the site on a laptop during a meeting and 
 ## Visual rules
 
 - Header: white, sticky, concise horizontal brand navigation, and a restrained active state.
+- Landing page: a logo-led brand portfolio featuring the real Champion, Under Armour, Gear for Sports, and ComfortWash marks; Pro Sports is presented separately as a cross-brand program category.
 - Workspace: true cool off-white, no beige or decorative gradients.
 - Type: Public Sans only; hierarchy comes from weight, spacing, and scale.
 - Catalog composition: merchandise cover beside concise context and two compact document columns—Catalogs & Programs, then Pricing.

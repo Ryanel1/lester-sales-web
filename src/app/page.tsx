@@ -3,67 +3,119 @@ import Link from "next/link";
 import { ArrowRightIcon } from "@/components/Icons";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { brands, publishedResourceCount } from "@/data/portal";
+
+const portfolioBrands = [
+  {
+    className: "portfolioBrandChampion",
+    description: "Heritage athleticwear and collegiate apparel.",
+    height: 844,
+    href: "/brands/champion",
+    image: "/brand-logos/champion-logo.png",
+    imageAlt: "Champion",
+    name: "Champion",
+    width: 1500,
+  },
+  {
+    className: "portfolioBrandUnderArmour",
+    description: "Performance apparel, headwear, and accessories.",
+    height: 300,
+    href: "/brands/under-armour",
+    image: "/brand-logos/under-armour-logo.png",
+    imageAlt: "Under Armour",
+    name: "Under Armour",
+    width: 300,
+  },
+  {
+    className: "portfolioBrandGear",
+    description: "Decorated collegiate and school apparel.",
+    height: 275,
+    href: "/brands/gear-comfortwash",
+    image: "/brand-logos/gear-for-sports-logo.jpg",
+    imageAlt: "Gear for Sports",
+    name: "Gear for Sports",
+    width: 275,
+  },
+  {
+    className: "portfolioBrandComfortWash",
+    description: "Garment-dyed tees and fleece built around color and softness.",
+    height: 225,
+    href: "/brands/gear-comfortwash",
+    image: "/brand-logos/comfortwash-logo.png",
+    imageAlt: "ComfortWash",
+    name: "ComfortWash",
+    width: 225,
+  },
+];
 
 export default function HomePage() {
   return (
     <>
       <SiteHeader />
       <main id="main-content">
-        <section className="homeHero">
-          <div className="homeHeroCopy">
-            <h1>The right sales tools, right when you need them.</h1>
+        <section className="portfolioHero">
+          <div className="portfolioHeroInner">
+            <h1>Our brand portfolio.</h1>
+            <div className="portfolioHeroIntroduction">
+              <p>
+                Champion, Under Armour, Gear for Sports, and ComfortWash—represented with the
+                catalogs, pricing, art, and programs that support the sale.
+              </p>
+              <span>Select a brand to open its current customer resources.</span>
+            </div>
+          </div>
+        </section>
+
+        <section aria-label="Brand partners" className="portfolioShowcase">
+          <div className="portfolioGrid">
+            {portfolioBrands.map((brand) => (
+              <Link
+                aria-label={`Explore ${brand.name} resources`}
+                className={`portfolioBrand ${brand.className}`}
+                href={brand.href}
+                key={brand.name}
+              >
+                <div className="portfolioBrandMark">
+                  <Image
+                    alt={brand.imageAlt}
+                    height={brand.height}
+                    priority
+                    sizes="(max-width: 760px) 72vw, (max-width: 1100px) 38vw, 420px"
+                    src={brand.image}
+                    width={brand.width}
+                  />
+                </div>
+                <div className="portfolioBrandDetails">
+                  <div>
+                    <h2>{brand.name}</h2>
+                    <p>{brand.description}</p>
+                  </div>
+                  <span className="portfolioBrandArrow" aria-hidden="true">
+                    <ArrowRightIcon />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="proSportsPortfolio">
+          <div className="proSportsPortfolioInner">
+            <div>
+              <p>Licensed team programs across the portfolio</p>
+              <h2>Pro Sports</h2>
+            </div>
             <p>
-              Browse current inline catalogs, open prebooks, pricing sheets, and art collections by brand.
+              Find current professional-team catalogs and programs in one destination, regardless
+              of the brand producing the assortment.
             </p>
-            <Link className="heroAction" href="/brands/champion">
-              Browse Champion <ArrowRightIcon className="heroActionIcon" />
+            <Link href="/brands/pro-sports">
+              View Pro Sports <ArrowRightIcon />
             </Link>
           </div>
-          <div className="heroCovers" aria-label="Current catalog covers">
-            <div className="heroCover heroCoverChampion">
-              <Image
-                alt="Champion Collegiate 2026 catalog cover"
-                fill
-                priority
-                sizes="(max-width: 760px) 60vw, 340px"
-                src="/catalogs/champion-collegiate-2026.jpg"
-              />
-            </div>
-            <div className="heroCover heroCoverGear">
-              <Image
-                alt="Gear for Sports Collegiate 2026 catalog cover"
-                fill
-                priority
-                sizes="(max-width: 760px) 48vw, 280px"
-                src="/catalogs/gear-collegiate-2026.jpg"
-              />
-            </div>
-          </div>
         </section>
 
-        <section className="brandDirectory" aria-labelledby="brands-heading">
-          <div className="directoryIntro">
-            <h2 id="brands-heading">Browse by brand</h2>
-            <p>Every brand page follows the same order: inline catalogs, art library, then open prebooks.</p>
-          </div>
-          <div className="brandRows">
-            {brands.map((brand, index) => {
-              const count = publishedResourceCount(brand);
-              return (
-                <Link className="brandRow" href={`/brands/${brand.slug}`} key={brand.slug}>
-                  <span className="brandRowIndex">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="brandRowName">{brand.name}</span>
-                  <span className="brandRowStatus">{count ? `${count} active resource groups` : "Ready for new materials"}</span>
-                  <ArrowRightIcon className="brandRowArrow" />
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="homeNote">
-          <p>Need help finding the right program?</p>
+        <section className="homeContact">
+          <p>Need help choosing the right line or program?</p>
           <a href="mailto:info@lestersales.net">Contact Lester Sales</a>
         </section>
       </main>
