@@ -637,45 +637,143 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
 .notFound h1 { font-size: clamp(2.25rem, 5vw, 3.8rem); letter-spacing: -0.03em; line-height: 1; margin: 0 0 26px; }
 .notFound a { font-size: 0.8125rem; font-weight: 700; text-underline-offset: 4px; }
 
-/* Password screen: the portal's light palette and focused access layout. */
+/* Password screen: one focused action over a soft stadium backdrop. */
 
-.accessPage { background: var(--surface); display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(440px, 1.1fr); min-height: 100dvh; }
-.accessIntroduction {
-  background: var(--workspace-subtle);
-  border-right: 1px solid var(--line);
-  color: var(--text);
+.accessPage {
+  background: #0b1722;
+  color: #f6f3eb;
+  isolation: isolate;
+  min-height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+.accessPage::before {
+  background-image: url("/images/stadium-access.jpg");
+  background-position: center;
+  background-size: cover;
+  content: "";
+  filter: blur(3px);
+  inset: -8px;
+  position: fixed;
+  transform: scale(1.02);
+  z-index: 0;
+}
+.accessPage::after {
+  background: rgba(5, 14, 23, 0.66);
+  content: "";
+  inset: 0;
+  position: fixed;
+  z-index: 1;
+}
+.accessShell {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: clamp(26px, 4vh, 38px);
+  justify-content: center;
   min-height: 100dvh;
-  padding: clamp(28px, 4.5vw, 68px);
+  padding: max(32px, env(safe-area-inset-top)) 24px max(32px, env(safe-area-inset-bottom));
+  position: relative;
+  transform: translateY(-1.5vh);
+  z-index: 2;
 }
-.accessWordmark { font-size: 0.9375rem; font-weight: 500; letter-spacing: -0.02em; text-decoration: none; }
+.accessBrand { text-align: center; }
+.accessWordmark {
+  color: #ffffff;
+  display: inline-block;
+  font-size: clamp(1.8rem, 4vw, 2.15rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  text-decoration: none;
+}
 .accessWordmark span { font-weight: 900; }
-.accessIntroductionCopy { max-width: 680px; padding-bottom: clamp(24px, 6vh, 60px); }
-.accessEyebrow { color: var(--text-faint); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.05em; margin: 0 0 18px; text-transform: uppercase; }
-.accessIntroduction h1 { font-size: clamp(2.5rem, 4.4vw, 4.25rem); font-weight: 700; letter-spacing: -0.025em; line-height: 0.98; margin: 0; max-width: 11ch; text-wrap: balance; }
-.accessIntroductionCopy > p:last-child { color: var(--text-soft); font-size: 0.9375rem; line-height: 1.55; margin: 24px 0 0; max-width: 48ch; }
-.accessFootnote { color: var(--text-faint); font-size: 0.6875rem; margin: 0; }
-.accessPanel { align-items: center; display: flex; padding: clamp(44px, 8vw, 116px); }
-.accessFormWrap { margin: 0 auto; max-width: 440px; width: 100%; }
-.accessFormWrap h2 { font-size: 2rem; letter-spacing: -0.025em; line-height: 1; margin: 0 0 34px; max-width: 12ch; }
+.accessBrand p {
+  color: rgba(244, 245, 242, 0.78);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 11px 0 0;
+}
+.accessPanel {
+  backdrop-filter: blur(18px);
+  background: rgba(13, 18, 22, 0.91);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(1, 8, 14, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  max-width: 420px;
+  padding: clamp(30px, 5vw, 40px);
+  width: 100%;
+}
+.accessFormWrap h1 {
+  color: #ffffff;
+  font-size: clamp(1.75rem, 4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  margin: 0;
+}
+.accessIntroduction {
+  color: rgba(239, 241, 239, 0.66);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin: 10px 0 28px;
+}
 .accessForm { display: grid; }
-.accessForm label { font-size: 0.75rem; font-weight: 700; margin-bottom: 9px; }
-.accessForm input[type="password"] { background: var(--surface); border: 1px solid #bdc8ce; border-radius: var(--radius); color: var(--text); min-height: 48px; padding: 0 14px; transition: border-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease; width: 100%; }
-.accessForm input[type="password"]:focus { border-color: var(--focus); box-shadow: 0 0 0 3px rgba(68, 115, 143, 0.14); outline: 0; }
-.accessForm input[aria-invalid="true"] { border-color: var(--error); }
-.accessForm button, .accessContinue { align-items: center; background: var(--control); border: 0; border-radius: var(--radius); color: white; cursor: pointer; display: flex; font-size: 0.75rem; font-weight: 700; justify-content: space-between; margin-top: 12px; min-height: 46px; padding: 0 15px; text-decoration: none; transition: background-color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out); width: 100%; }
-.accessForm button:hover, .accessContinue:hover { background: var(--control-hover); transform: translateY(-1px); }
-.accessButtonIcon { height: 17px; width: 17px; }
-.accessError { color: var(--error); font-size: 0.75rem; line-height: 1.45; margin: 8px 0 0; }
-.accessHelp { color: var(--text-soft); font-size: 0.75rem; line-height: 1.55; margin: 20px 0 0; }
-.accessHelp a { font-weight: 700; text-underline-offset: 3px; }
-.accessNotice { background: var(--surface-muted); border-radius: var(--radius); display: grid; gap: 6px; padding: 16px; }
+.accessForm label {
+  color: rgba(249, 249, 246, 0.86);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.accessForm input[type="password"] {
+  background: rgba(5, 8, 10, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  color: #ffffff;
+  min-height: 50px;
+  padding: 0 14px;
+  transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
+  width: 100%;
+}
+.accessForm input[type="password"]::placeholder { color: rgba(242, 244, 242, 0.38); }
+.accessForm input[type="password"]:hover { border-color: rgba(255, 255, 255, 0.26); }
+.accessForm input[type="password"]:focus {
+  background: rgba(5, 8, 10, 0.62);
+  border-color: rgba(239, 235, 222, 0.72);
+  box-shadow: 0 0 0 3px rgba(239, 235, 222, 0.12);
+  outline: 0;
+}
+.accessForm input[aria-invalid="true"] { border-color: #d9867d; }
+.accessForm button, .accessContinue {
+  align-items: center;
+  background: #eee9dc;
+  border: 0;
+  border-radius: 8px;
+  color: #17212a;
+  cursor: pointer;
+  display: flex;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  justify-content: center;
+  margin-top: 14px;
+  min-height: 48px;
+  padding: 0 16px;
+  text-decoration: none;
+  transition: background-color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
+  width: 100%;
+}
+.accessForm button:hover, .accessContinue:hover { background: #ffffff; transform: translateY(-1px); }
+.accessForm button:active, .accessContinue:active { transform: translateY(1px); }
+.accessError { color: #e59a91; font-size: 0.75rem; line-height: 1.45; margin: 8px 0 0; }
+.accessHelp { color: rgba(239, 241, 239, 0.58); font-size: 0.75rem; line-height: 1.5; margin: 22px 0 0; text-align: center; }
+.accessHelp a { font-weight: 600; text-decoration-color: rgba(239, 241, 239, 0.44); text-underline-offset: 4px; transition: color var(--motion-fast) ease, text-decoration-color var(--motion-fast) ease; }
+.accessHelp a:hover { color: #ffffff; text-decoration-color: #ffffff; }
+.accessNotice { background: rgba(255, 255, 255, 0.07); border-radius: 8px; display: grid; gap: 6px; padding: 16px; }
 .accessNotice strong { font-size: 0.8125rem; }
-.accessNotice span { color: var(--text-soft); font-size: 0.75rem; line-height: 1.5; }
-.accessNoticeError { background: var(--error-soft); color: var(--error); }
-.accessContinue { margin-top: 12px; }
+.accessNotice span { color: rgba(239, 241, 239, 0.66); font-size: 0.75rem; line-height: 1.5; }
+.accessNoticeError { background: rgba(161, 63, 52, 0.2); color: #f0b0a9; }
+.accessContinue { margin-top: 18px; }
 
 @media (max-width: 900px) {
   .siteHeaderInner { align-items: flex-start; flex-direction: column; gap: 0; height: auto; padding-top: 16px; }
@@ -687,10 +785,6 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
   .proSportsPortfolio a { justify-self: start; }
   .catalogFeature, .prebookFeature { gap: 32px; grid-template-columns: minmax(250px, 0.85fr) minmax(300px, 1.15fr); }
   .artLinks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .accessPage { grid-template-columns: 1fr; }
-  .accessIntroduction { border-bottom: 1px solid var(--line); border-right: 0; min-height: 520px; }
-  .accessIntroduction h1 { font-size: clamp(2.5rem, 9vw, 4rem); }
-  .accessPanel { min-height: 520px; }
 }
 
 @media (max-width: 700px) {
@@ -723,9 +817,8 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
   .brandIntro h1 { font-size: 2.35rem; }
   .sectionNav { gap: 0; }
   .sectionNav a { font-size: 0.75rem; padding-left: 12px; padding-right: 12px; }
-  .accessIntroduction { min-height: 480px; padding: 24px; }
-  .accessIntroductionCopy { padding-bottom: 30px; }
-  .accessPanel { min-height: 500px; padding: 52px 24px; }
+  .accessShell { gap: 24px; padding-left: 18px; padding-right: 18px; transform: none; }
+  .accessPanel { padding: 28px 24px 30px; }
 }
 
 @media (pointer: coarse) {

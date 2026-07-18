@@ -4,8 +4,8 @@ import { expect, test, type Page } from "@playwright/test";
 async function signIn(page: Page, destination = "/brands/champion") {
   await page.goto(destination);
   await expect(page).toHaveURL(/\/access\?/);
-  await page.getByLabel("Customer password").fill("champ1");
-  await page.getByRole("button", { name: "Open resource library" }).click();
+  await page.getByLabel("Password").fill("champ1");
+  await page.getByRole("button", { name: "Sign In" }).click();
   await expect(page).toHaveURL(destination);
 }
 
@@ -40,13 +40,19 @@ test("brand navigation and sign-out complete the customer journey", async ({ pag
 
 test("access and authenticated pages have no serious automated accessibility violations", async ({ page }) => {
   await page.goto("/brands/champion");
-  await expect(page.getByRole("heading", { name: "Everything you need, kept in one place." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Welcome Back" })).toBeVisible();
   await expectNoSeriousA11yViolations(page);
 
-  await page.getByLabel("Customer password").fill("champ1");
-  await page.getByRole("button", { name: "Open resource library" }).click();
+  await page.getByLabel("Password").fill("champ1");
+  await page.getByRole("button", { name: "Sign In" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Champion" })).toBeVisible();
   await expectNoSeriousA11yViolations(page);
+});
+
+test("the access page stadium image is available before sign-in", async ({ request }) => {
+  const response = await request.get("/images/stadium-access.jpg", { maxRedirects: 0 });
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("image/jpeg");
 });
 
 test("administrator APIs reject anonymous requests", async ({ request }) => {
