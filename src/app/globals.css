@@ -648,7 +648,7 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
   position: relative;
 }
 .accessPage::before {
-  background-image: url("/images/stadium-access.jpg");
+  background-image: url("/images/warehouse-access.jpg");
   background-position: center;
   background-size: cover;
   content: "";
