@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AccessMotion } from "@/components/AccessMotion";
 import { getPortalAuthConfig, safeReturnPath } from "@/lib/portal-auth";
 
 export const metadata: Metadata = {
@@ -20,12 +21,12 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
 
   return (
     <main className="accessPage" id="main-content">
-      <div className="accessShell">
+      <AccessMotion>
         <header className="accessBrand">
-          <Link className="accessWordmark" href="/" aria-label="Lester Sales home">
+          <Link className="wordmark accessWordmark" href="/" aria-label="Lester Sales home">
             <span>Lester</span> Sales
           </Link>
-          <p>Ordering made easy.</p>
+          <p className="accessTagline">Ordering made easy.</p>
         </header>
 
         <section className="accessPanel" aria-labelledby="sign-in-title">
@@ -46,8 +47,8 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
             ) : (
               <form action="/api/access" className="accessForm" method="post">
                 <input name="next" type="hidden" value={returnPath} />
-                <label htmlFor="password">Password</label>
                 <input
+                  aria-label="Password"
                   aria-describedby={accessError ? "access-error access-help" : "access-help"}
                   aria-invalid={accessError || undefined}
                   autoComplete="current-password"
@@ -81,7 +82,7 @@ export default async function AccessPage({ searchParams }: AccessPageProps) {
             )}
           </div>
         </section>
-      </div>
+      </AccessMotion>
     </main>
   );
 }

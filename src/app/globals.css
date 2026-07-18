@@ -659,7 +659,7 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
   z-index: 0;
 }
 .accessPage::after {
-  background: rgba(5, 14, 23, 0.66);
+  background: rgba(13, 25, 34, 0.62);
   content: "";
   inset: 0;
   position: fixed;
@@ -669,7 +669,7 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
   align-items: center;
   display: flex;
   flex-direction: column;
-  gap: clamp(26px, 4vh, 38px);
+  gap: clamp(24px, 3.8vh, 34px);
   justify-content: center;
   min-height: 100dvh;
   padding: max(32px, env(safe-area-inset-top)) 24px max(32px, env(safe-area-inset-bottom));
@@ -679,100 +679,91 @@ a.resourceLink:hover { background: var(--surface-muted); border-color: #bdc9cf; 
 }
 .accessBrand { text-align: center; }
 .accessWordmark {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.96);
   display: inline-block;
-  font-size: clamp(1.8rem, 4vw, 2.15rem);
-  font-weight: 500;
-  letter-spacing: -0.055em;
-  line-height: 1;
-  text-decoration: none;
+  font-size: clamp(1.75rem, 3.2vw, 2.15rem);
 }
-.accessWordmark span { font-weight: 900; }
-.accessBrand p {
-  color: rgba(244, 245, 242, 0.78);
-  font-size: 0.875rem;
+.accessTagline {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: clamp(0.875rem, 1.4vw, 1rem);
   font-weight: 500;
   letter-spacing: -0.01em;
   margin: 11px 0 0;
 }
 .accessPanel {
-  backdrop-filter: blur(18px);
-  background: rgba(13, 18, 22, 0.91);
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 14px;
-  box-shadow: 0 24px 70px rgba(1, 8, 14, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 70px rgba(17, 34, 46, 0.24), 0 4px 14px rgba(17, 34, 46, 0.1);
   max-width: 420px;
-  padding: clamp(30px, 5vw, 40px);
+  padding: clamp(30px, 4.5vw, 40px);
   width: 100%;
 }
 .accessFormWrap h1 {
-  color: #ffffff;
-  font-size: clamp(1.75rem, 4vw, 2rem);
+  color: var(--text);
+  font-size: clamp(1.35rem, 3vw, 1.6rem);
   font-weight: 700;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
   line-height: 1;
   margin: 0;
+  text-align: center;
 }
 .accessIntroduction {
-  color: rgba(239, 241, 239, 0.66);
+  color: var(--text-soft);
   font-size: 0.8125rem;
   line-height: 1.5;
   margin: 10px 0 28px;
+  text-align: center;
 }
 .accessForm { display: grid; }
-.accessForm label {
-  color: rgba(249, 249, 246, 0.86);
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
 .accessForm input[type="password"] {
-  background: rgba(5, 8, 10, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
-  color: #ffffff;
-  min-height: 50px;
+  background: var(--surface);
+  border: 1px solid #bdc8ce;
+  border-radius: var(--radius);
+  color: var(--text);
+  min-height: 48px;
   padding: 0 14px;
+  text-align: center;
   transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
   width: 100%;
 }
-.accessForm input[type="password"]::placeholder { color: rgba(242, 244, 242, 0.38); }
-.accessForm input[type="password"]:hover { border-color: rgba(255, 255, 255, 0.26); }
+.accessForm input[type="password"]::placeholder { color: var(--text-soft); }
+.accessForm input[type="password"]:hover { border-color: #98a7af; }
 .accessForm input[type="password"]:focus {
-  background: rgba(5, 8, 10, 0.62);
-  border-color: rgba(239, 235, 222, 0.72);
-  box-shadow: 0 0 0 3px rgba(239, 235, 222, 0.12);
+  background: var(--surface);
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(68, 115, 143, 0.14);
   outline: 0;
 }
-.accessForm input[aria-invalid="true"] { border-color: #d9867d; }
+.accessForm input[aria-invalid="true"] { border-color: var(--error); }
 .accessForm button, .accessContinue {
   align-items: center;
-  background: #eee9dc;
+  background: var(--control);
   border: 0;
-  border-radius: 8px;
-  color: #17212a;
+  border-radius: var(--radius);
+  color: #ffffff;
   cursor: pointer;
   display: flex;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 700;
   justify-content: center;
   margin-top: 14px;
-  min-height: 48px;
+  min-height: 46px;
   padding: 0 16px;
   text-decoration: none;
   transition: background-color var(--motion-fast) ease, transform var(--motion-fast) var(--ease-out);
   width: 100%;
 }
-.accessForm button:hover, .accessContinue:hover { background: #ffffff; transform: translateY(-1px); }
+.accessForm button:hover, .accessContinue:hover { background: var(--control-hover); transform: translateY(-1px); }
 .accessForm button:active, .accessContinue:active { transform: translateY(1px); }
-.accessError { color: #e59a91; font-size: 0.75rem; line-height: 1.45; margin: 8px 0 0; }
-.accessHelp { color: rgba(239, 241, 239, 0.58); font-size: 0.75rem; line-height: 1.5; margin: 22px 0 0; text-align: center; }
-.accessHelp a { font-weight: 600; text-decoration-color: rgba(239, 241, 239, 0.44); text-underline-offset: 4px; transition: color var(--motion-fast) ease, text-decoration-color var(--motion-fast) ease; }
-.accessHelp a:hover { color: #ffffff; text-decoration-color: #ffffff; }
-.accessNotice { background: rgba(255, 255, 255, 0.07); border-radius: 8px; display: grid; gap: 6px; padding: 16px; }
+.accessError { color: var(--error); font-size: 0.75rem; line-height: 1.45; margin: 8px 0 0; }
+.accessHelp { color: var(--text-soft); font-size: 0.75rem; line-height: 1.5; margin: 22px 0 0; text-align: center; }
+.accessHelp a { color: var(--publisher-link); font-weight: 700; text-underline-offset: 4px; transition: color var(--motion-fast) ease; }
+.accessHelp a:hover { color: var(--text); }
+.accessNotice { background: var(--surface-muted); border-radius: var(--radius); color: var(--text); display: grid; gap: 6px; padding: 16px; }
 .accessNotice strong { font-size: 0.8125rem; }
-.accessNotice span { color: rgba(239, 241, 239, 0.66); font-size: 0.75rem; line-height: 1.5; }
-.accessNoticeError { background: rgba(161, 63, 52, 0.2); color: #f0b0a9; }
+.accessNotice span { color: var(--text-soft); font-size: 0.75rem; line-height: 1.5; }
+.accessNoticeError { background: var(--error-soft); color: var(--error); }
 .accessContinue { margin-top: 18px; }
 
 @media (max-width: 900px) {
